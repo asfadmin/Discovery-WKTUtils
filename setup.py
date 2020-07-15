@@ -11,7 +11,7 @@ setuptools.setup(
     description="A few WKT utilities for use elsewhere",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="git@github.com/asfadmin/Discovery-WKTUtils.git",
+    url="https://github.com/asfadmin/Discovery-WKTUtils.git",
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
