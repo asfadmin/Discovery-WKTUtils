@@ -5,13 +5,13 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="WKTUtils",
-    version="0.0.1",
+    version="0.0.2",
     author="ASF Discovery Team",
     author_email="uaf-asf-discovery@alaska.edu",
     description="A few WKT utilities for use elsewhere",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="git@github.com/asfadmin/Discovery-WKTUtils.git",
+    url="https://github.com/asfadmin/Discovery-WKTUtils.git",
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
