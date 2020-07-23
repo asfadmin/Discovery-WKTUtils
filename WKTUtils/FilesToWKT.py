@@ -20,11 +20,11 @@ class filesToWKT:
         # Have to group all shp types together:
         file_dict = {}
         for file in self.files:
-            full_name = file.name                       # Everything.
+            full_name = file.filename                       # Everything.
             ext = full_name.split(".")[-1:][0].lower()  # Everything after the last dot.
 
             if ext == "zip":
-                # Add each file 
+                # Add each file
                 with BytesIO(file.read()) as zip_f:
                     zip_obj = zipfile.ZipFile(zip_f)
                     parts = zip_obj.namelist()
@@ -71,7 +71,7 @@ class filesToWKT:
             full_wkt = "GEOMETRYCOLLECTION({0})".format(",".join(wkt_list))
         self.returned_dict = {"parsed wkt": full_wkt}
 
-    
+
     def getWKT(self):
         # Only return the 'errors' key IF there are errors...
         if self.errors != []:
@@ -159,8 +159,8 @@ def parse_kml(f):
         wkt_json = kml2json(kml_root)
     # All these BUT the type/value errors are for the md.parseString:
     # except (DefusedXmlException, DTDForbidden, EntitiesForbidden, ExternalReferenceForbidden, NotSupportedError, TypeError, ValueError) as e:
-    except Exception as e:  
-        return {'error': {'type': 'VALUE', 'report': 'Could not parse kml: {0}'.format(str(e))}} 
+    except Exception as e:
+        return {'error': {'type': 'VALUE', 'report': 'Could not parse kml: {0}'.format(str(e))}}
     return json_to_wkt(wkt_json)
 
 def parse_shapefile(fileset):
