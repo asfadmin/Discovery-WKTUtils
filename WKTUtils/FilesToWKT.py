@@ -20,7 +20,10 @@ class filesToWKT:
         # Have to group all shp types together:
         file_dict = {}
         for file in self.files:
-            full_name = file.filename                       # Everything.
+            try:
+                full_name = file.filename
+            except AttributeError:
+                full_name = file.name
             ext = full_name.split(".")[-1:][0].lower()  # Everything after the last dot.
 
             if ext == "zip":
