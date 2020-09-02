@@ -14,7 +14,7 @@ def get_config():
             'cmr_api': '/search/granules.echo10',
             'cmr_collections': '/search/collections',
             'cmr_headers': {
-                'Client-Id': 'vertex_asf'
+                'Client-Id': 'local_searchapi_asf'
             }
         },
         'devel': {
@@ -26,7 +26,7 @@ def get_config():
             'cmr_api': '/search/granules.echo10',
             'cmr_collections': '/search/collections',
             'cmr_headers': {
-                'Client-Id': 'vertex_asf'
+                'Client-Id': 'devel_vertex_asf'
             }
         },
         'devel-beanstalk': {
@@ -38,7 +38,7 @@ def get_config():
             'cmr_api': '/search/granules.echo10',
             'cmr_collections': '/search/collections',
             'cmr_headers': {
-                'Client-Id': 'vertex_asf'
+                'Client-Id': 'devel_searchapi_asf'
             }
         },
         'test': {
@@ -50,7 +50,7 @@ def get_config():
             'cmr_api': '/search/granules.echo10',
             'cmr_collections': '/search/collections',
             'cmr_headers': {
-                'Client-Id': 'vertex_asf'
+                'Client-Id': 'test_vertex_asf'
             }
         },
         'test-beanstalk': {
@@ -62,7 +62,7 @@ def get_config():
             'cmr_api': '/search/granules.echo10',
             'cmr_collections': '/search/collections',
             'cmr_headers': {
-                'Client-Id': 'vertex_asf'
+                'Client-Id': 'test_searchapi_asf'
             }
         },
         'prod': {
@@ -74,7 +74,7 @@ def get_config():
             'cmr_api': '/search/granules.echo10',
             'cmr_collections': '/search/collections',
             'cmr_headers': {
-                'Client-Id': 'vertex_asf'
+                'Client-Id': 'searchapi_asf'
             }
         },
         'prod-private': {
