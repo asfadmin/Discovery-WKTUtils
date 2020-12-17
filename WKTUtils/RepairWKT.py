@@ -8,15 +8,79 @@ import shapely.ops
 import re
 import json
 import numpy as np
+import pyproj
+import geopandas
 from geomet import wkt, InvalidGeoJSONException
 from sklearn.neighbors import NearestNeighbors
 from shapely.geometry import Polygon, LineString, Point
 
+# Accepts a single wkt string, or a tuple with crs projection
+# (Or a list of the above, mixed)
+# Accepted: wkt_str, (wkt_str,), (wkt_str, crs), [wkt_str, (wkt_str,crs)]
+
 class simplifyWKT():
-    def __init__(self, wkt_str):
+    def __init__(self, wkt_obj, default_crs = "EPSG:4326"):
         self.shapes = []
         self.errors = None
         self.repairs = []
+
+        # Make sure you can load the default_crs:
+        try:
+            default_crs = pyproj.CRS.from_user_input(default_crs)
+        except pyproj.exceptions.CRSError as e:
+            self.errors = { 'errors': [{'type': 'CRS_PARAM', 'report': 'Could not load default crs "{0}". Error: "{1}".'.format(default_crs, str(e))}]}
+            return
+        
+        ### Loop through, turn all items into tuples inside of a list:
+        if type(wkt_obj) != list:
+            wkt_obj = [wkt_obj]
+        wkt_list =[]
+        reproject_count = 0
+
+        for wkt_idx in wkt_obj:
+            # If it's not a tuple at all, give the default
+            if type(wkt_idx) != tuple:
+                wkt_idx = (wkt_idx, default_crs)
+            # If it is a tuple, check the second half:
+            elif len(wkt_idx) == 0:
+                pass
+            elif len(wkt_idx) == 1:
+                wkt_idx = (wkt_idx[0], default_crs)
+            else:
+                try:
+                    crs_idx = pyproj.CRS.from_user_input(wkt_idx[1])
+                except pyproj.exceptions.CRSError as e:
+                    crs_idx = default_crs
+                wkt_idx = (wkt_idx[0], crs_idx)
+            # Load it into geopanda to reporject:
+            wkt_shapely = shapely.wkt.loads(wkt_idx[0])
+            wkt_geopanda = geopandas.GeoSeries([wkt_shapely], crs=wkt_idx[1])
+            # Reproject it if not in lat/long:
+            if wkt_geopanda.crs != "EPSG:4326":
+                wkt_geopanda = wkt_geopanda.to_crs("EPSG:4326")
+                reproject_count += 1
+            ### Recombine and append:
+            wkt_list = [shape.wkt for shape in wkt_geopanda]
+            wkt_str = 'GEOMETRYCOLLECTION({0})'.format(",".join(wkt_list))
+            # shapely_shp = shapely.ops.unary_union(wkt_geopanda)
+            # # Linestrings get broken apart in unary_union, combine back together:
+            # # Type: MultiLineString
+            # if shapely_shp.type == "MultiLineString":
+            #     shapely_shp = shapely.ops.linemerge(shapely_shp)
+            # elif shapely_shp.type == "GeometryCollection":
+            #     for shape in shapely_shp:
+            #         if shape.type == "MultiLineString":
+            #             shape = shapely.ops.linemerge(shape)
+            # # This assumess unary_union can't return a geocollection of a geocollection.
+
+            # print(shapely_shp.type)
+            # wkt_list.append(shapely_shp.wkt)
+        if reproject_count != 0:
+            self.repairs.append({'type': 'REPROJECT', 'report': "Reprojected {0} wkt(s) to EPSG:4326.".format(reproject_count)})
+            logging.debug(self.repairs[-1])
+        # Create the new wkt string:
+        # wkt_str = 'GEOMETRYCOLLECTION({0})'.format(",".join(wkt_list))
+
         # I use this in a couple areas. It matches things like: .5, 6e-6, -9. etc.
         self.regex_digit = r"(-?(((\d+\.\d+|\d+)(e-?\d+)?)|(\d+\.|\.\d+)))"
 
@@ -41,7 +105,9 @@ class simplifyWKT():
         # Turn the json into a list of individual shapes:
         # (Populates self.shapes)
         self.__splitApartShapes(wkt_json)
-        self.shapes, self.repairs = self.__repairEachJsonShape(self.shapes)
+        self.shapes, repairs = self.__repairEachJsonShape(self.shapes)
+
+        self.repairs.extend(repairs)
         self.shapes = self.__jsonToShapely(self.shapes)
 
         # See if a merge is required or not:
@@ -212,7 +278,6 @@ class simplifyWKT():
                 else:
                     repairs_done.append(repair)
                 
-
         # Combine all the points to a single shape and add it:
         if len(list_of_points) == 1:
             repaired_shapes.append(list_of_points[0])
@@ -533,8 +598,8 @@ class simplifyWKT():
 
 
 
-def repairWKT(wkt_str):
-    return simplifyWKT(wkt_str).get_simplified_json()
+def repairWKT(wkt_str, default_crs = "EPSG:4326"):
+    return simplifyWKT(wkt_str, default_crs=default_crs).get_simplified_json()
 
 
 
