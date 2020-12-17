@@ -32,6 +32,7 @@ class simplifyWKT():
             return
         
         ### Loop through, turn all items into tuples inside of a list:
+        # (Also reporject it now if not in lat/long)
         if type(wkt_obj) != list:
             wkt_obj = [wkt_obj]
         wkt_list =[]
@@ -60,28 +61,15 @@ class simplifyWKT():
                 wkt_geopanda = wkt_geopanda.to_crs("EPSG:4326")
                 reproject_count += 1
             ### Recombine and append:
-            wkt_list = [shape.wkt for shape in wkt_geopanda]
-            wkt_str = 'GEOMETRYCOLLECTION({0})'.format(",".join(wkt_list))
-            # shapely_shp = shapely.ops.unary_union(wkt_geopanda)
-            # # Linestrings get broken apart in unary_union, combine back together:
-            # # Type: MultiLineString
-            # if shapely_shp.type == "MultiLineString":
-            #     shapely_shp = shapely.ops.linemerge(shapely_shp)
-            # elif shapely_shp.type == "GeometryCollection":
-            #     for shape in shapely_shp:
-            #         if shape.type == "MultiLineString":
-            #             shape = shapely.ops.linemerge(shape)
-            # # This assumess unary_union can't return a geocollection of a geocollection.
-
-            # print(shapely_shp.type)
-            # wkt_list.append(shapely_shp.wkt)
+            for shape in wkt_geopanda:
+                wkt_list.append(shape.wkt)
+        # Create the new wkt string, with reprojected values:
+        wkt_str = 'GEOMETRYCOLLECTION({0})'.format(",".join(wkt_list))
+        # Check if you repaired any projections:
         if reproject_count != 0:
             self.repairs.append({'type': 'REPROJECT', 'report': "Reprojected {0} wkt(s) to EPSG:4326.".format(reproject_count)})
             logging.debug(self.repairs[-1])
-        # Create the new wkt string:
-        # wkt_str = 'GEOMETRYCOLLECTION({0})'.format(",".join(wkt_list))
 
-        # I use this in a couple areas. It matches things like: .5, 6e-6, -9. etc.
         self.regex_digit = r"(-?(((\d+\.\d+|\d+)(e-?\d+)?)|(\d+\.|\.\d+)))"
 
         try:
