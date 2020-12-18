@@ -6,7 +6,7 @@ import defusedxml.minidom as md
 from kml2geojson import build_feature_collection as kml2json
 from geomet import wkt
 from io import BytesIO
-
+import geopandas
 
 class filesToWKT:
     # files = [ open(dir, 'rb'), open(dir2, 'rb'), open(dir3, 'rb') ]
@@ -24,10 +24,21 @@ class filesToWKT:
                 full_name = file.filename
             except AttributeError:
                 full_name = file.name
+            name = ".".join(full_name.split(".")[:-1])  # Everything before the last dot.
             ext = full_name.split(".")[-1:][0].lower()  # Everything after the last dot.
-
+            ### First see if geopandas can handle it.
+            try:
+                geoshape = geopandas.read_file(file)
+                # Turn from GeoDataFrame to  GeoSeries:
+                geoshape = geoshape.geometry
+                # Add it to the file list:
+                self.add_file_to_dict(file_dict, name+".pandas", geoshape)
+                continue
+            # If anything goes wrong, try to go back to the old ways:
+            except:
+                file.seek(0) # Move read curser to 0, lets you read again
             if ext == "zip":
-                # Add each file
+                # First check for a full shapefile set:
                 with BytesIO(file.read()) as zip_f:
                     zip_obj = zipfile.ZipFile(zip_f)
                     parts = zip_obj.namelist()
@@ -48,6 +59,18 @@ class filesToWKT:
             #       the key will become 'file.kml'. The val is always a dict for shps tho):
             if isinstance(val, type({})):
                 returned_wkt = parse_shapefile(val)
+            elif ext == "pandas":
+                # For this, val IS the geopandas object.
+                # Check if you need to reporject the wkt. (Might be None):
+                if val.crs and val.crs != "EPSG:4326":
+                    val = val.to_crs("EPSG:4326")
+                if len(val) == 0:
+                    continue
+                elif len(val) == 1:
+                    returned_wkt = val[0].wkt
+                else:
+                    tmp_list = [shape.wkt for shape in val]
+                    returned_wkt = "GEOMETRYCOLLECTION ({0})".format(",".join(tmp_list))
             # Check for each type now:
             elif ext == "geojson":
                 returned_wkt = parse_geojson(val)
@@ -66,12 +89,11 @@ class filesToWKT:
             else:
                 wkt_list.append(returned_wkt)
 
-        if len(wkt_list) == 0:
-            return
-        elif len(wkt_list) == 1:
-            full_wkt = wkt_list[0]
-        else:
-            full_wkt = "GEOMETRYCOLLECTION({0})".format(",".join(wkt_list))
+        # Turn it into a single WKT:
+        full_wkt = "GEOMETRYCOLLECTION({0})".format(",".join(wkt_list))
+        # Bring it to json and back, to collaps any nested GEOMETRYCOLLECTIONS.
+        # It'll be in a collection if and only if there are more than one shapes.
+        full_wkt = json_to_wkt(wkt.loads(full_wkt))
         self.returned_dict = {"parsed wkt": full_wkt}
 
 
@@ -92,6 +114,8 @@ class filesToWKT:
             if file_name not in file_dict:
                 file_dict[file_name] = {}
             file_dict[file_name][ext] = BytesIO(file_stream)
+        elif ext in ["pandas"]:
+            file_dict[full_name] = file_stream # Actually geopandas object for this one.
         # BASIC FILES:
         elif ext in ["kml", "geojson"]:
             file_dict[full_name] = BytesIO(file_stream)
@@ -106,6 +130,9 @@ class filesToWKT:
 # Takes any json, and returns a list of all {"type": x, "coordinates": y} objects
 # found, ignoring anything else in the block
 def recurse_find_geojson(json_input):
+    # NOTE: geojson doesn't go through this anymore, with adding geopandas
+    # parser. Instead, make this happen AFTER shapes are loaded/transformed
+    # to geojson, to simplify EVERYTHING handed to us down.
     if isinstance(json_input, type({})):
         # If it's a dict, try to load the minimal required for a shape.
         # Then recurse on every object, just incase more are nested inside:
