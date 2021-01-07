@@ -1,5 +1,6 @@
 import os, sys              # Generic imports
 import geomet.wkt           # For comparing wkt's
+import shapely
 
 # Add the package to pythonpath before import:
 root_dir = os.path.abspath(os.path.join(".."))
@@ -66,9 +67,9 @@ class test_filesToWKT_manager():
     def runAssertTests(self, test_info, wkt_json):
         if "parsed wkt" in test_info:
             if "parsed wkt" in wkt_json:
-                lhs = geomet.wkt.loads(wkt_json["parsed wkt"])
-                rhs = geomet.wkt.loads(test_info["parsed wkt"])
-                assert lhs == rhs, self.error_msg.format("Parsed wkt returned from API did not match 'parsed wkt'.")
+                lhs = shapely.wkt.loads(wkt_json["parsed wkt"])
+                rhs = shapely.wkt.loads(test_info["parsed wkt"])
+                assert lhs.almost_equals(rhs, decimal=8), self.error_msg.format("Parsed wkt returned from API did not match 'parsed wkt'.")
             else:
                 # Here, I want content to be last. sometimes it explodes in length...                
                 assert False, self.error_msg.format("API did not return a WKT.") + "\n - Content: "+str(wkt_json)
