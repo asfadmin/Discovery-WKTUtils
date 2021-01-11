@@ -13,11 +13,7 @@ class test_repairWKT_manager():
 
         test_info = self.applyDefaultValues(test_info)
         # Make a request, and turn it into json. Helpers should handle if something goes wrong:
-        
-        if "from_crs" in test_info:
-            repaired_wkt_json = repairWKT(test_info["test wkt"], default_crs=test_info["from_crs"])
-        else:
-            repaired_wkt_json = repairWKT(test_info["test wkt"])
+        repaired_wkt_json = repairWKT(test_info["test wkt"])
         # Make sure the response matches what is expected from the test:
         self.runAssertTests(test_info, repaired_wkt_json)
         if test_info["print"] == True:
@@ -60,16 +56,12 @@ class test_repairWKT_manager():
     def runAssertTests(self, test_info, response_json):
         if "repaired wkt wrapped" in test_info:
             if "wkt" in response_json:
-                responce = shapely.wkt.loads(response_json["wkt"]["wrapped"])
-                expected = shapely.wkt.loads(test_info["repaired wkt wrapped"])
-                assert responce.almost_equals(expected, decimal=8) , self.error_msg.format("WKT wrapped failed to match the result.\nExpected: {0}\nActual: {1}\n".format(test_info["repaired wkt wrapped"], response_json["wkt"]["wrapped"]))
+                assert shapely.wkt.loads(response_json["wkt"]["wrapped"]) == shapely.wkt.loads(test_info["repaired wkt wrapped"]), self.error_msg.format("WKT wrapped failed to match the result.\nExpected: {0}\nActual: {1}\n".format(test_info["repaired wkt wrapped"], response_json["wkt"]["wrapped"]))
             else:
                 assert False, "WKT not found in response from API. Test: '{0}'. Response: {1}.".format(test_info["title"], response_json)
         if "repaired wkt unwrapped" in test_info:
             if "wkt" in response_json:
-                responce = shapely.wkt.loads(response_json["wkt"]["unwrapped"])
-                expected = shapely.wkt.loads(test_info["repaired wkt wrapped"])
-                assert responce.almost_equals(expected, decimal=8), self.error_msg.format("WKT unwrapped failed to match the result.\nExpected: {0}\nActual: {1}\n".format(test_info["repaired wkt wrapped"], response_json["wkt"]["wrapped"]))
+                assert shapely.wkt.loads(response_json["wkt"]["unwrapped"]) == shapely.wkt.loads(test_info["repaired wkt unwrapped"]), self.error_msg.format("WKT unwrapped failed to match the result.\nExpected: {0}\nActual: {1}\n".format(test_info["repaired wkt wrapped"], response_json["wkt"]["wrapped"]))
             else:
                 assert False, self.error_msg.format("WKT not found in response from API. Response: {0}.".format(response_json))
 
