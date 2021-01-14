@@ -16,7 +16,7 @@ distro==1.4.0
 execnet==1.7.1
 Fiona==1.8.18
 geomet==0.2.1.post1
-git+git://github.com/geopandas/geopandas.git
+git+git://github.com/geopandas/geopandas.git@630f13bacb6dd2a287a77a94c218225af8bad895
 html5lib==1.0.1
 idna==2.8
 iniconfig==1.1.1
