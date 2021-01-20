@@ -7,13 +7,15 @@ import shapely.wkt
 import shapely.ops
 import re
 import json
+import pyproj
+import geopandas
 import numpy as np
 from geomet import wkt, InvalidGeoJSONException
 from sklearn.neighbors import NearestNeighbors
 from shapely.geometry import Polygon, LineString, Point
 
 class simplifyWKT():
-    def __init__(self, wkt_str):
+    def __init__(self, wkt_obj, default_crs="EPSG:4326"):
         self.shapes = []
         self.errors = None
         self.repairs = []
@@ -577,7 +579,7 @@ class simplifyWKT():
         self.wkt_wrapped = wkt.dumps(wkt_obj_wrapped)
         self.wkt_unwrapped = wkt.dumps(wkt_obj_unwrapped)
 
-def repairWKT(wkt_str):
+def repairWKT(wkt_str, default_crs="EPSG:4326"):
     return simplifyWKT(wkt_str, default_crs=default_crs).get_simplified_json()
 
 
