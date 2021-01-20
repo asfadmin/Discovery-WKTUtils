@@ -8,18 +8,12 @@ import shapely.ops
 import re
 import json
 import numpy as np
-import pyproj
-import geopandas
 from geomet import wkt, InvalidGeoJSONException
 from sklearn.neighbors import NearestNeighbors
 from shapely.geometry import Polygon, LineString, Point
 
-# Accepts a single wkt string, or a tuple with crs projection
-# (Or a list of the above, mixed)
-# Accepted: wkt_str, (wkt_str,), (wkt_str, crs), [wkt_str, (wkt_str,crs)]
-
 class simplifyWKT():
-    def __init__(self, wkt_obj, default_crs = "EPSG:4326"):
+    def __init__(self, wkt_str):
         self.shapes = []
         self.errors = None
         self.repairs = []
@@ -69,6 +63,8 @@ class simplifyWKT():
             self.repairs.append({'type': 'REPROJECT', 'report': "Reprojected {0} wkt(s) to EPSG:4326.".format(reproject_count)})
             logging.debug(self.repairs[-1])
 
+
+        # I use this in a couple areas. It matches things like: .5, 6e-6, -9. etc.
         self.regex_digit = r"(-?(((\d+\.\d+|\d+)(e-?\d+)?)|(\d+\.|\.\d+)))"
 
         try:
@@ -80,7 +76,7 @@ class simplifyWKT():
             wkt_json = wkt.loads(wkt_str)
         except AttributeError as e:
             self.errors = { 'errors': [{'type': 'ATTRIBUTE', 'report': 'Could not parse WKT: {0}.'.format(str(e))}] }
-            return
+            return           
         except (ValueError, InvalidGeoJSONException) as e:
             self.errors = { 'errors': [{'type': 'VALUE', 'report': 'Could not parse WKT: {0}.'.format(str(e))}] }
             return
@@ -91,9 +87,7 @@ class simplifyWKT():
         # Turn the json into a list of individual shapes:
         # (Populates self.shapes)
         self.__splitApartShapes(wkt_json)
-        self.shapes, repairs = self.__repairEachJsonShape(self.shapes)
-
-        self.repairs.extend(repairs)
+        self.shapes, self.repairs = self.__repairEachJsonShape(self.shapes)
         self.shapes = self.__jsonToShapely(self.shapes)
 
         # See if a merge is required or not:
@@ -121,11 +115,11 @@ class simplifyWKT():
                 self.repairs.append(possible_repair)
                 logging.debug(self.repairs[-1])
 
-
+ 
         self.wkt_unwrapped, self.wkt_wrapped = self.__repairMergedWKT(single_wkt)
         # If the repairMergedWkt hit an error:
         if self.errors != None:
-            return
+            return        
 
         if single_wkt.geom_type.upper() == "POLYGON":
             # Uses/Modifies wkt_wrapped and wkt_unwrapped:
@@ -137,7 +131,7 @@ class simplifyWKT():
         if self.errors != None:
             return self.errors
         else:
-            return {
+            return { 
                 'wkt': {
                     'wrapped': self.wkt_wrapped,
                     'unwrapped': self.wkt_unwrapped
@@ -172,7 +166,7 @@ class simplifyWKT():
         elif wkt_json['type'].upper() in ['POINT', 'LINESTRING', 'POLYGON']:
             if wkt_json not in self.shapes:
                 self.shapes.append(wkt_json)
-        else:
+        else: 
             # Append whatever it is as is. Each individual shape gets sent through
             # a repair function anyway before converting it to shapely.
             if wkt_json not in self.shapes:
@@ -263,6 +257,7 @@ class simplifyWKT():
                 # Else it IS the repair jsonblock:
                 else:
                     repairs_done.append(repair)
+                
 
         # Combine all the points to a single shape and add it:
         if len(list_of_points) == 1:
@@ -271,7 +266,7 @@ class simplifyWKT():
             new_shape = self.__convexHullShape(list_of_points)
             repaired_shapes.append(new_shape)
             repairs_done.append({
-                                'type': 'POINT_MERGE',
+                                'type': 'POINT_MERGE', 
                                 'report': 'Multiple points found: {0}. Grouping them and using their convex hull instead'.format(len(list_of_points))
                                 })
             logging.debug(repairs_done[-1])
@@ -396,8 +391,8 @@ class simplifyWKT():
     # shapely_wkt => Shapely object of type ["POLYGON", "LINESTRING", "POINT"]
     def __repairMergedWKT(self, single_wkt):
         ## Helper functions (Code at end of these):
-        # First, it clamps the values, simplifies the points, THEN wraps and
-        #       returns wrapped/unwrapped strings
+        # First, it clamps the values, simplifies the points, THEN wraps and 
+        #       returns wrapped/unwrapped strings 
         def getCoords(wkt_json):
             # make coords of any shape the format of [[coord, coord],[coord,coord]]:
             if wkt_json["type"].upper() == "POLYGON":
@@ -459,14 +454,6 @@ class simplifyWKT():
                 })
                 logging.debug(self.repairs[-1])
             return getJsonWKT(wkt_json['type'], new_coords)
-
-        def getUnwrappedCoords(wkt_json):
-            old_coords = getCoords(wkt_json)
-            lons = [p[0] for p in old_coords]
-            if(max(lons) - min(lons) > 180):
-                new_coords = [a if a[0] > 0 else [a[0] + 360, a[1]] for a in old_coords]
-                return getJsonWKT(wkt_json['type'], new_coords)
-            return getJsonWKT(wkt_json['type'], old_coords)
 
         def simplifyPoints(wkt_json):
             def getClosestPointDist(wkt_json):
@@ -537,13 +524,12 @@ class simplifyWKT():
         # Clamp, simplify, *then* wrap, to help simplify be more accuate w/ points outside of poles
         if self.errors != None:
             return
-        wrapped_coords = getWrappedCoords(wkt_json)
-        wkt_wrapped = wkt.dumps(wrapped_coords)
-        wkt_unwrapped = wkt.dumps(getUnwrappedCoords(wrapped_coords))
+        wkt_unwrapped = wkt.dumps(wkt_json)
+        wkt_wrapped = wkt.dumps(getWrappedCoords(wkt_json))
         return wkt_unwrapped, wkt_wrapped
 
     def __runWKTsAgainstCMR(self):
-
+    
         def CMRSendRequest(cmr_coords):
             cfg = get_config()
             # logging.debug({'polygon': ','.join(cmr_coords), 'provider': 'ASF', 'page_size': 1})
@@ -569,7 +555,7 @@ class simplifyWKT():
                     wkt_obj_unwrapped['coordinates'][0].reverse()
 
                     self.repairs.append({
-                        'type': 'REVERSE',
+                        'type': 'REVERSE', 
                         'report': 'Reversed polygon winding order'
                         })
                     logging.debug(self.repairs[-1])
@@ -585,17 +571,14 @@ class simplifyWKT():
                 bad_points = re.findall(match_brackets, text)
                 self.errors = { 'errors': [{'type': 'DUPLICATE_POINTS', 'report': 'Duplicated or too-close points: [{0}]'.format("], [".join(bad_points))}]}
             else:
-                self.errors = { 'errors': [{'type': 'UNKNOWN', 'report': 'Unknown CMR error: {0}'.format(text)}]}
-                return
+                self.errors = { 'errors': [{'type': 'UNKNOWN', 'report': 'Unknown CMR error: {0}'.format(text)}]}     
+                return     
 
         self.wkt_wrapped = wkt.dumps(wkt_obj_wrapped)
         self.wkt_unwrapped = wkt.dumps(wkt_obj_unwrapped)
 
-
-
-def repairWKT(wkt_str, default_crs = "EPSG:4326"):
-    json_responce = simplifyWKT(wkt_str, default_crs=default_crs).get_simplified_json()
-    return json_responce
+def repairWKT(wkt_str):
+    return simplifyWKT(wkt_str, default_crs=default_crs).get_simplified_json()
 
 
 
