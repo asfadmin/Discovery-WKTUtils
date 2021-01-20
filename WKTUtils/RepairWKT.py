@@ -23,7 +23,6 @@ class simplifyWKT():
         self.shapes = []
         self.errors = None
         self.repairs = []
-
         # Make sure you can load the default_crs:
         try:
             default_crs = pyproj.CRS.from_user_input(default_crs)
@@ -75,10 +74,9 @@ class simplifyWKT():
         try:
             # wkt.loads doesn't like 3D/4D tags, BUT it loads the coords just fine:
             wkt_str = wkt_str.upper()
-            wkt_str = wkt_str.replace(" Z", " ")
-            wkt_str = wkt_str.replace(" M", " ")
-            wkt_str = wkt_str.replace(" ZM", " ")
-
+            wkt_str = wkt_str.replace(" Z ", " ")
+            wkt_str = wkt_str.replace(" M ", " ")
+            wkt_str = wkt_str.replace(" ZM ", " ")
             wkt_json = wkt.loads(wkt_str)
         except AttributeError as e:
             self.errors = { 'errors': [{'type': 'ATTRIBUTE', 'report': 'Could not parse WKT: {0}.'.format(str(e))}] }
@@ -596,7 +594,8 @@ class simplifyWKT():
 
 
 def repairWKT(wkt_str, default_crs = "EPSG:4326"):
-    return simplifyWKT(wkt_str, default_crs=default_crs).get_simplified_json()
+    json_responce = simplifyWKT(wkt_str, default_crs=default_crs).get_simplified_json()
+    return json_responce
 
 
 
