@@ -19,4 +19,18 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     python_requires='>=3.6',
+    install_requires=[
+        "geopandas @ git+git://github.com/geopandas/geopandas.git@630f13bacb6dd2a287a77a94c218225af8bad895",
+        'dateparser==1.0.0',
+        'defusedxml==0.6.0',
+        'Fiona==1.8.18',
+        'geomet==0.2.1.post1',
+        'kml2geojson==4.0.2',
+        'pyshp==2.1.0',
+        'PyYAML==5.3.1',
+        'regex==2020.11.13',
+        'requests==2.22.0',
+        'Shapely==1.6.4.post2',
+        'sklearn==0.0'
+    ]
 )
