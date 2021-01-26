@@ -15,7 +15,7 @@ phases:
   build:
     commands:
       # Setup the wheel to upload:
-      - python setup.py bdist_wheel
+      - python3.7 setup.py bdist_wheel
       # Run a quick check on it for errors:
       - twine check dist/*
       # Set creds for the account:
