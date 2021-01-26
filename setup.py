@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="WKTUtils",
-    version="0.0.3",
+    version="0.0.4",
     author="ASF Discovery Team",
     author_email="uaf-asf-discovery@alaska.edu",
     description="A few WKT utilities for use elsewhere",
