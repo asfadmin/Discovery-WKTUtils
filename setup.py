@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="WKTUtils",
-    version="0.0.2",
+    version="0.0.4",
     author="ASF Discovery Team",
     author_email="uaf-asf-discovery@alaska.edu",
     description="A few WKT utilities for use elsewhere",
@@ -20,7 +20,7 @@ setuptools.setup(
     ],
     python_requires='>=3.6',
     install_requires=[
-        "geopandas @ git+git://github.com/geopandas/geopandas.git@630f13bacb6dd2a287a77a94c218225af8bad895",
+        "GeologyUtils==0.0.1",
         'dateparser==1.0.0',
         'defusedxml==0.6.0',
         'Fiona==1.8.18',
