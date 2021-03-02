@@ -1,5 +1,7 @@
 # Discovery-WKTUtils
 
+[![image](https://img.shields.io/pypi/v/wktutils.svg)](https://pypi.python.org/pypi/WKTUtils)
+
 ### To Install as Package, add the following line to requirements.txt:
 
 ```bash
