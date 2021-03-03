@@ -1,0 +1,19 @@
+name: Label the PR
+
+on:
+  pull_request:
+    branches:
+      - prod
+      - test
+      - devel
+
+jobs:
+  bump-label:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require Labels
+        uses: mheap/github-action-required-labels@v1
+        with:
+          mode: exactly
+          count: 1
+          labels: "major, minor, patch, bumpless" 
