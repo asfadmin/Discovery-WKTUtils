@@ -1,11 +1,19 @@
 name: Run Pytest Suite
+description: Run the pytest Suite
 
-on: ['pull_request']
+inputs:
+  PYTEST_OPTIONS:
+    description: "Arguments passed onto the 'pyest' param."
+    required: false
+    default: ""
+  AUTO_OPTIONS:
+    description: "Arguments passed to PytestAutomation."
+    required: false
+    default: ""
 
-jobs:
-  RunSuite:
-    runs-on: ubuntu-latest
-    steps:
+runs:
+  using: ubuntu-latest
+  steps:
     - uses: actions/checkout@v2
     
     - name: Set up Python
@@ -24,3 +32,33 @@ jobs:
         git clone --branch prod https://github.com/asfadmin/Discovery-PytestAutomation
         cd Discovery-PytestAutomation
         pytest -s .
+
+
+####
+# name: Run Pytest Suite
+
+
+# on: [push, pull_request]
+
+# jobs:
+#   RunSuite:
+#     runs-on: ubuntu-latest
+#     steps:
+#     - uses: actions/checkout@v2
+    
+#     - name: Set up Python
+#       uses: actions/setup-python@v2
+#       with:
+#         python-version: '3.x'
+#     # https://github.com/actions/create-release#example-workflow---create-a-release
+#     - name: Install dependencies
+#       run: |
+#         python -m pip install --upgrade pip
+#         python -m pip install .
+#         python -m pip install pytest pytest-xdist PyYAML
+
+#     - name: Run the Suite
+#       run: |
+#         git clone --branch prod https://github.com/asfadmin/Discovery-PytestAutomation
+#         cd Discovery-PytestAutomation
+#         pytest -s .
