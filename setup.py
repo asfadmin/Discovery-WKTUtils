@@ -40,7 +40,7 @@ setuptools.setup(
         'PyYAML==5.3.1',
         'regex==2020.11.13',
         'requests==2.22.0',
-        'Shapely==1.6.4.post2',
+        'Shapely==1.7.1',
         'sklearn==0.0'
     ]
 )
