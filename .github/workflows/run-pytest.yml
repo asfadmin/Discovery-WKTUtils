@@ -1,14 +1,9 @@
 name: Run Pytest Suite
 
-on:
-  push:
-    branches:
-      - prod
-      - test
-      - devel
+on: ['push', 'pull_request']
 
 jobs:
-  deploy:
+  RunSuite:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
