@@ -9,9 +9,8 @@ on:
 
 jobs:
   deploy:
-
     runs-on: ubuntu-latest
-
+    # if: github.ref == 'refs/heads/prod'
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python
