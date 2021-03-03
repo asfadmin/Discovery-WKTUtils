@@ -3,7 +3,8 @@ import subprocess
 
 # Get the version from git and save it:
 wktutils_version = subprocess.run(['git', 'describe', '--tags'], stdout=subprocess.PIPE).stdout.decode("utf-8").strip()
-assert "." in wktutils_version, "ERROR: Cannot get version from git. Version: '{0}'.".format(wktutils_version)
+if "." not in wktutils_version:
+    wktutils_version = "0.0.0"
 
 # with open("WKTUTils/VERSION", "w+") as fh:
 #     fh.write(str(wktutils_version) + "\n")
