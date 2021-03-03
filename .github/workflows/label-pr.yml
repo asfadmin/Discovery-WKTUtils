@@ -2,6 +2,11 @@ name: Label the PR
 
 on:
   pull_request:
+    types:
+      - opened
+      - labeled
+      - unlabeled
+      - synchronize
     branches:
       - prod
       - test
@@ -11,7 +16,7 @@ jobs:
   bump-label:
     runs-on: ubuntu-latest
     steps:
-      - name: Require Labels
+      - name: Require Version Label
         uses: mheap/github-action-required-labels@v1
         with:
           mode: exactly
