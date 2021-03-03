@@ -12,10 +12,8 @@ inputs:
     default: ""
 
 runs:
-  using: ubuntu-latest
-  steps:
-    - uses: actions/checkout@v2
-    
+  using: "composite"
+  steps:    
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
@@ -26,12 +24,14 @@ runs:
         python -m pip install --upgrade pip
         python -m pip install .
         python -m pip install pytest pytest-xdist PyYAML
+      shell: bash
 
     - name: Run the Suite
       run: |
         git clone --branch prod https://github.com/asfadmin/Discovery-PytestAutomation
         cd Discovery-PytestAutomation
-        pytest -s .
+        pytest ${{ inputs.PYTEST_OPTIONS }} . ${{ inputs.AUTO_OPTIONS }}
+      shell: bash
 
 
 ####
