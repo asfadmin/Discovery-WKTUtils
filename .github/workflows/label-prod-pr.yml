@@ -9,8 +9,6 @@ on:
       - synchronize
     branches:
       - prod
-      - test
-      - devel
 
 jobs:
   check-version-label:
@@ -22,9 +20,3 @@ jobs:
           mode: exactly
           count: 1
           labels: "major, minor, patch, bumpless" 
-  
-  run-test-suite:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v1
-      - uses: ./actions
