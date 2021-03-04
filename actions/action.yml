@@ -12,10 +12,10 @@ inputs:
     default: ""
 
 runs:
-  using: "composite"
+  using: "includes"
   steps:    
     - name: Set up Python
-      uses: actions/setup-python@v2
+      includes: actions/setup-python@v2
       with:
         python-version: '3.x'
     # https://github.com/actions/create-release#example-workflow---create-a-release
