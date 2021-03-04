@@ -26,4 +26,4 @@ jobs:
   run-test-suite:
     runs-on: ubuntu-latest
     steps:
-      - uses: ./github/actions/run-pytest.yml
+      - uses: ./github/actions/
