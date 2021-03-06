@@ -29,7 +29,7 @@ runs:
       shell: bash
       run: |
         python3 -m pip install --upgrade pip
-        python3 -m pip install pytest pytest-xdist PyYAML setuptools
+        python3 -m pip install pytest pytest-xdist PyYAML setuptools wheel
         python3 -m pip install .
 
     - name: Run the Suite
@@ -37,7 +37,7 @@ runs:
       run: |
         git clone --branch prod https://github.com/asfadmin/Discovery-PytestAutomation
         cd Discovery-PytestAutomation
-        pytest ${{ inputs.PYTEST_OPTIONS }} . ${{ inputs.AUTO_OPTIONS }}
+        python3 -m pytest ${{ inputs.PYTEST_OPTIONS }} . ${{ inputs.AUTO_OPTIONS }}
 
 
 ####
