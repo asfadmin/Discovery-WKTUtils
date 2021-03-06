@@ -14,17 +14,8 @@ inputs:
 runs:
   using: "composite"
   steps:
-    # - name: Set up Python
-    #   uses: actions/setup-python@v2
-    #   with:
-    #     python-version: '3.x'
-    # https://github.com/actions/create-release#example-workflow---create-a-release
-
-    - name: Set up Python
-      shell: bash
-      run: |
-        echo "test"
-
+    # Pytest auto packages: pytest pytest-xdist PyYAML
+    # Pip install dir packages: setuptools wheel
     - name: Install dependencies
       shell: bash
       run: |
@@ -32,39 +23,13 @@ runs:
         python3 -m pip install pytest pytest-xdist PyYAML setuptools wheel
         python3 -m pip install .
 
-    - name: Run the Suite
+    - name: Clone PytestAuto
       shell: bash
       run: |
         git clone --branch prod https://github.com/asfadmin/Discovery-PytestAutomation
         cd Discovery-PytestAutomation
+
+    - name: Run the Suite
+      shell: bash
+      run: |
         python3 -m pytest ${{ inputs.PYTEST_OPTIONS }} . ${{ inputs.AUTO_OPTIONS }}
-
-
-####
-# name: Run Pytest Suite
-
-
-# on: [push, pull_request]
-
-# jobs:
-#   RunSuite:
-#     runs-on: ubuntu-latest
-#     steps:
-#     - uses: actions/checkout@v2
-    
-#     - name: Set up Python
-#       uses: actions/setup-python@v2
-#       with:
-#         python-version: '3.x'
-#     # https://github.com/actions/create-release#example-workflow---create-a-release
-#     - name: Install dependencies
-#       run: |
-#         python -m pip install --upgrade pip
-#         python -m pip install .
-#         python -m pip install pytest pytest-xdist PyYAML
-
-#     - name: Run the Suite
-#       run: |
-#         git clone --branch prod https://github.com/asfadmin/Discovery-PytestAutomation
-#         cd Discovery-PytestAutomation
-#         pytest -s .
