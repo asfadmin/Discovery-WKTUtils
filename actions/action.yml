@@ -21,22 +21,23 @@ runs:
     # https://github.com/actions/create-release#example-workflow---create-a-release
 
     - name: Set up Python
+      shell: bash
       run: |
         echo "test"
 
     - name: Install dependencies
+      shell: bash
       run: |
         python -m pip install --upgrade pip
         python -m pip install .
         python -m pip install pytest pytest-xdist PyYAML
-      shell: bash
 
     - name: Run the Suite
+      shell: bash
       run: |
         git clone --branch prod https://github.com/asfadmin/Discovery-PytestAutomation
         cd Discovery-PytestAutomation
         pytest ${{ inputs.PYTEST_OPTIONS }} . ${{ inputs.AUTO_OPTIONS }}
-      shell: bash
 
 
 ####
