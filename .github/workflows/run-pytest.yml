@@ -2,12 +2,12 @@ name: Runs the test suite
 
 on:
     # All pushes. (colon w/ no key means all defaults)
-  # - push:
-  - pull_request:
-      branches:
-        - prod
-        - test
-        - devel
+  push:
+  pull_request:
+    branches:
+      - prod
+      - test
+      - devel
 
 
 jobs:
