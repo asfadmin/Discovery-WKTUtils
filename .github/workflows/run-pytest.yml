@@ -1,8 +1,9 @@
 name: Runs the test suite
 
 on:
-    # All pushes. (colon w/ no key means all defaults)
+  # All pushes. (colon w/ no key means all defaults)
   push:
+  # Just pull requests from these branches:
   pull_request:
     branches:
       - prod
@@ -17,4 +18,4 @@ jobs:
       # Get the code:
       - uses: actions/checkout@v1
       # Run the local action:
-      - uses: ./.github/pytest-automation
+      - uses: ./.github/actions/pytest-automation
