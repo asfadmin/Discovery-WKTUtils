@@ -10,3 +10,5 @@ jobs:
       - uses: actions/checkout@v1
       # Run the local action:
       - uses: ./.github/actions/pytest-automation
+        with:
+          PYTEST_OPTIONS: -n auto
