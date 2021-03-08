@@ -27,9 +27,9 @@ runs:
       shell: bash
       run: |
         git clone --branch prod https://github.com/asfadmin/Discovery-PytestAutomation
-        cd Discovery-PytestAutomation
 
     - name: Run the Suite
       shell: bash
       run: |
+        cd Discovery-PytestAutomation
         python3 -m pytest ${{ inputs.PYTEST_OPTIONS }} . ${{ inputs.AUTO_OPTIONS }}
