@@ -1,15 +1,7 @@
 name: Runs the test suite
 
-on:
-  # All pushes. (colon w/ no key means all defaults)
-  push:
-  # Just pull requests from these branches:
-  pull_request:
-    branches:
-      - prod
-      - test
-      - devel
-
+# Push also gets triggered on pull requests:
+on: push
 
 jobs:
   run-test-suite:
