@@ -1,7 +1,6 @@
 name: Runs the test suite
 
-# Push also gets triggered on pull requests:
-on: pull_request
+on: [pull_request, push]
 
 jobs:
   run-test-suite:
