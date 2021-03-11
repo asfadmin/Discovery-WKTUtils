@@ -31,6 +31,8 @@ jobs:
   UpdateDevel:
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@v2
+
     - name: Attempt fast-forward develop from main
       run: |
         git fetch --prune
