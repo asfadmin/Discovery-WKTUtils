@@ -33,22 +33,22 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Attempt fast-forward develop from main
+    - name: Attempt fast-forward devel from prod
       run: |
         git fetch --prune
-        git checkout develop && git pull --ff-only
-        git merge --ff-only origin/main
+        git checkout devel && git pull --ff-only
+        git merge --ff-only origin/prod
         git push
 
     # Open a PR, if the vanilla pull failed
-    - name: Open PR to bring main back to develop
+    - name: Open PR to bring main back to devel
       if: ${{ failure() }}
       uses: repo-sync/pull-request@v2
       with:
         source_branch: prod
         destination_branch: devel
-        pr_title: Pulling ${{ github.ref }} into default
-        pr_body: Fast-forward of main to default failed!
+        pr_title: Pulling ${{ github.ref }} into devel
+        pr_body: Fast-forward of prod to devel failed!
         pr_assignee: ${{ github.actor }}
         pr_label: bot created
         pr_draft: false
