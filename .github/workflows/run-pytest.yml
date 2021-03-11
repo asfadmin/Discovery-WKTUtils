@@ -1,0 +1,14 @@
+name: Runs the test suite
+
+on: [pull_request, push]
+
+jobs:
+  run-test-suite:
+    runs-on: ubuntu-latest
+    steps:
+      # Get the code:
+      - uses: actions/checkout@v1
+      # Run the local action:
+      - uses: ./.github/actions/pytest-automation
+        with:
+          PYTEST_OPTIONS: -n auto

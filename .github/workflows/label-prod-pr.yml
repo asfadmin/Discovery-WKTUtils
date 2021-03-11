@@ -1,0 +1,22 @@
+name: Sanity check all merges to these branches.
+
+on:
+  pull_request:
+    types:
+      - opened
+      - labeled
+      - unlabeled
+      - synchronize
+    branches:
+      - prod
+
+jobs:
+  check-version-label:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require Version Label
+        uses: mheap/github-action-required-labels@v1
+        with:
+          mode: exactly
+          count: 1
+          labels: "major, minor, patch, bumpless" 

@@ -1,0 +1,54 @@
+name: Open a New Release
+
+on:
+  # Merges also trigger a push for github actions:
+  push:
+    branches:
+      - test
+      - prod
+
+jobs:
+  OpenRequest:
+    runs-on: ubuntu-latest
+    # If a merge request triggered the push, and that request DOESN'T contain the 'bumpless' label.
+    # (Another action says the request can only have 'major','minor','patch','bumpless', so now the other three are guanteed)
+    if: github.event.pull_request.merged && !contains(github.event.pull_request.labels.*.name, 'bumpless')
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Create a Release
+      uses: zendesk/action-create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
+
+        
+
+  # Tell devel that the merge happened:
+  UpdateDevel:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Attempt fast-forward develop from main
+      run: |
+        git fetch --prune
+        git checkout develop && git pull --ff-only
+        git merge --ff-only origin/main
+        git push
+
+    # Open a PR, if the vanilla pull failed
+    - name: Open PR to bring main back to develop
+      if: ${{ failure() }}
+      uses: repo-sync/pull-request@v2
+      with:
+        source_branch: prod
+        destination_branch: devel
+        pr_title: Pulling ${{ github.ref }} into default
+        pr_body: Fast-forward of main to default failed!
+        pr_assignee: ${{ github.actor }}
+        pr_label: bot created
+        pr_draft: false
+        pr_allow_empty: true
+        # github_token: ${{ secrets.BOT_TOKEN }}
+        github_token: ${{ secrets.GITHUB_TOKEN }} # Built in token
+
