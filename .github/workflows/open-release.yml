@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     # If a merge request triggered the push, and that request DOESN'T contain the 'bumpless' label.
     # (Another action says the request can only have 'major','minor','patch','bumpless', so now the other three are guanteed)
-    if: github.event.pull_request.merged && !contains(github.event.pull_request.labels.*.name, 'bumpless')
+    if: github.event.pull_request.merged #&& !contains(github.event.pull_request.labels.*.name, 'bumpless')
     steps:
     - uses: actions/checkout@v2
     
