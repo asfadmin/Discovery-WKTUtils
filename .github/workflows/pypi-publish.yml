@@ -3,12 +3,14 @@
 
 name: Upload Python Package
 
-on: [release]
-
+on:
+  release:
+    types: [created]
+    branches: [prod, test]
 
 jobs:
 
-  deploy to pypi:
+  DeployToPypi:
     runs-on: ubuntu-latest
     # if: github.ref == 'refs/heads/prod'
     steps:
