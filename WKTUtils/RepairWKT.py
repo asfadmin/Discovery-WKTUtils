@@ -7,6 +7,8 @@ import shapely.wkt
 import shapely.ops
 import re
 import json
+import pyproj
+import geopandas
 import numpy as np
 import pyproj
 import geopandas
@@ -19,10 +21,11 @@ from shapely.geometry import Polygon, LineString, Point
 # Accepted: wkt_str, (wkt_str,), (wkt_str, crs), [wkt_str, (wkt_str,crs)]
 
 class simplifyWKT():
-    def __init__(self, wkt_obj, default_crs = "EPSG:4326"):
+    def __init__(self, wkt_obj, default_crs="EPSG:4326"):
         self.shapes = []
         self.errors = None
         self.repairs = []
+
         # Make sure you can load the default_crs:
         try:
             default_crs = pyproj.CRS.from_user_input(default_crs)
@@ -69,6 +72,8 @@ class simplifyWKT():
             self.repairs.append({'type': 'REPROJECT', 'report': "Reprojected {0} wkt(s) to EPSG:4326.".format(reproject_count)})
             logging.debug(self.repairs[-1])
 
+
+        # I use this in a couple areas. It matches things like: .5, 6e-6, -9. etc.
         self.regex_digit = r"(-?(((\d+\.\d+|\d+)(e-?\d+)?)|(\d+\.|\.\d+)))"
 
         try:
@@ -591,11 +596,8 @@ class simplifyWKT():
         self.wkt_wrapped = wkt.dumps(wkt_obj_wrapped)
         self.wkt_unwrapped = wkt.dumps(wkt_obj_unwrapped)
 
-
-
-def repairWKT(wkt_str, default_crs = "EPSG:4326"):
-    json_responce = simplifyWKT(wkt_str, default_crs=default_crs).get_simplified_json()
-    return json_responce
+def repairWKT(wkt_str, default_crs="EPSG:4326"):
+    return simplifyWKT(wkt_str, default_crs=default_crs).get_simplified_json()
 
 
 
