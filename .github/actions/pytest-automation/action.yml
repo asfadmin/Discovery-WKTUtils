@@ -16,6 +16,7 @@ runs:
   steps:
     # Pytest auto packages: pytest pytest-xdist PyYAML
     # Pip install dir packages: setuptools wheel
+    # Then pip install local WKTUtils, with it's requirements
     - name: Install dependencies
       shell: bash
       run: |
