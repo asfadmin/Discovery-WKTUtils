@@ -2,7 +2,9 @@ name: Open a New Release
 
 on:
   # Merges also trigger a push for github actions:
-  push:
+  # push:
+  pull_request:
+    types: [closed]
     branches:
       - test
       - prod
