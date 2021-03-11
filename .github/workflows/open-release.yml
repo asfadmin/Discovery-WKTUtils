@@ -13,9 +13,15 @@ jobs:
   OpenRequest:
     runs-on: ubuntu-latest
     # If a merge request triggered the push, and that request DOESN'T contain the 'bumpless' label.
-    # (Another action says the request can only have 'major','minor','patch','bumpless', so now the other three are guanteed)
-    ## NOTE: Can't do incase of admin override. Directly check the three tags
-    if: github.event.pull_request.merged #&& !contains(github.event.pull_request.labels.*.name, 'bumpless')
+    # (Need to check all three, instead of 'not bumpless', because if and admin overrides the tests,
+    #   it might not have ANY labels at this point.).
+    if: >
+      github.event.pull_request.merged &&
+      (
+        contains(github.event.pull_request.labels.*.name, 'major') ||
+        contains(github.event.pull_request.labels.*.name, 'minor') ||
+        contains(github.event.pull_request.labels.*.name, 'patch')
+      )
     steps:
     - uses: actions/checkout@v2
     
