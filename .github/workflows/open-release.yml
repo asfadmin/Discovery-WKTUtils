@@ -14,6 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     # If a merge request triggered the push, and that request DOESN'T contain the 'bumpless' label.
     # (Another action says the request can only have 'major','minor','patch','bumpless', so now the other three are guanteed)
+    ## NOTE: Can't do incase of admin override. Directly check the three tags
     if: github.event.pull_request.merged #&& !contains(github.event.pull_request.labels.*.name, 'bumpless')
     steps:
     - uses: actions/checkout@v2
@@ -21,7 +22,8 @@ jobs:
     - name: Create a Release
       uses: zendesk/action-create-release@v1
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.BOT_TOKEN }}
       with:
         tag_schema: semantic
         draft: false
