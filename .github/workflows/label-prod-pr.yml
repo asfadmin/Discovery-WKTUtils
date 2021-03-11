@@ -10,8 +10,6 @@ on:
     branches:
       - prod
       - test
-    branches-ignore:
-      - devel
 
 jobs:
   check-version-label:
