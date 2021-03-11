@@ -16,6 +16,12 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    # Run the local test sutie action:
+    - uses: ./.github/actions/pytest-automation
+      with:
+        PYTEST_OPTIONS: -n auto
+    
+    # Actually push the package now:
     - name: Install dependencies
       run: |
         python3 -m pip install --upgrade pip
