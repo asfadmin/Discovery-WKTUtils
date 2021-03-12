@@ -14,12 +14,12 @@ jobs:
     # (Need to check all three, instead of 'not bumpless', because if and admin overrides the tests,
     #   it might not have ANY labels at this point.).
     if: >
-      github.event.pull_request.merged &&
-      (
-        contains(github.event.pull_request.labels.*.name, 'major') ||
-        contains(github.event.pull_request.labels.*.name, 'minor') ||
-        contains(github.event.pull_request.labels.*.name, 'patch')
-      )
+      github.event.pull_request.merged && 
+      ( 
+        contains(github.event.pull_request.labels.*.name, 'major') || 
+        contains(github.event.pull_request.labels.*.name, 'minor') || 
+        contains(github.event.pull_request.labels.*.name, 'patch') 
+      ) 
     steps:
     - uses: actions/checkout@v2
 
