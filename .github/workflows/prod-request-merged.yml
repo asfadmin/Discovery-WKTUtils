@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     # If a merge request triggered the push, and that request DOESN'T contain the 'bumpless' label.
     # (Need to check all three, instead of 'not bumpless', because if and admin overrides the tests,
-    #   it might not have ANY labels at this point.).
+    #   it might not have ANY labels at that point.).
     if: >
       github.event.pull_request.merged &&
       (
@@ -37,7 +37,7 @@ jobs:
         # NOT built in token, so this can trigger other actions:
         GITHUB_TOKEN: ${{ secrets.BOT_TOKEN }}
       with:
-        # version_type populated with the last job
+        # version_type populated with the last job just above ^^
         auto_increment_type: "${{ env.version_type }}"
         tag_schema: semantic
         draft: false
