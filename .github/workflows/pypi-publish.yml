@@ -13,7 +13,6 @@ jobs:
 
   DeployToPypi:
     runs-on: ubuntu-latest
-    # if: github.ref == 'refs/heads/prod'
     steps:
     - uses: actions/checkout@v2
 
