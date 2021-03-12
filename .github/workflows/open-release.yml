@@ -1,4 +1,4 @@
-name: Open a New Release
+name: Merged to Prod
 
 on:
   pull_request:
@@ -42,8 +42,6 @@ jobs:
         draft: false
         prerelease: false
 
-
-        
 
   # Tell devel that the merge happened:
   UpdateDevel:
