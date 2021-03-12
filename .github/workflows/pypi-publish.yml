@@ -6,7 +6,8 @@ name: Upload Python Package
 on:
   release:
     types: [created]
-    branches: [prod, test]
+    branches:
+      - prod
 
 jobs:
 
