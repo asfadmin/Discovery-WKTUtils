@@ -24,13 +24,11 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Save version type
-      uses: actions/github-script@v3
       # Whichever one return's true, will let their 'echo' statement run:
-      with:
-        script: |
-          contains(github.event.pull_request.labels.*.name, 'major') && echo "version_type=major" >> $GITHUB_ENV
-          contains(github.event.pull_request.labels.*.name, 'minor') && echo "version_type=minor" >> $GITHUB_ENV
-          contains(github.event.pull_request.labels.*.name, 'patch') && echo "version_type=patch" >> $GITHUB_ENV
+      run: |
+        ${{ contains(github.event.pull_request.labels.*.name, 'major') }} && echo "version_type=major" >> $GITHUB_ENV
+        ${{ contains(github.event.pull_request.labels.*.name, 'minor') }} && echo "version_type=minor" >> $GITHUB_ENV
+        ${{ contains(github.event.pull_request.labels.*.name, 'patch') }} && echo "version_type=patch" >> $GITHUB_ENV
 
     - name: Create a Release
       uses: zendesk/action-create-release@v1
