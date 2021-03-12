@@ -1,9 +1,9 @@
-name: Runs the test suite
+name: Run test suite
 
 on: [pull_request, push]
 
 jobs:
-  run-test-suite:
+  run-tests:
     runs-on: ubuntu-latest
     steps:
       # Get the code:
