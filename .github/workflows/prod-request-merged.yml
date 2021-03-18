@@ -5,6 +5,7 @@ on:
     types: [closed]
     branches:
       - prod
+      - test
 
 jobs:
   OpenRequest:
