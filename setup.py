@@ -30,17 +30,17 @@ setuptools.setup(
     ],
     python_requires='>=3.6',
     install_requires=[
-        'dateparser==1.0.0',
-        'defusedxml==0.6.0',
-        'Fiona==1.8.18',
-        'geomet==0.2.1.post1',
-        'geopandas==0.9.0',
-        'kml2geojson==4.0.2',
-        'pyshp==2.1.0',
-        'PyYAML==5.3.1',
-        'regex==2020.11.13',
-        'requests==2.22.0',
-        'Shapely==1.7.1',
-        'sklearn==0.0'
+        'dateparser',
+        'defusedxml',
+        'Fiona',
+        'geomet',
+        'geopandas',
+        'kml2geojson',
+        'pyshp',
+        'PyYAML',
+        'regex',
+        'requests',
+        'Shapely',
+        'sklearn'
     ]
 )
