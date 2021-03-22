@@ -9,7 +9,7 @@ and uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ## [0.1.2](https://github.com/asfadmin/Discovery-WKTUtils/compare/v0.1.1...v0.1.2)
 
 ### Added
-- For things that are `created` in this release.
+- For things that are `created` in this release. (New features!!)
 
 ### Changed
 - For functionality that's `changed`. (ie. Added default arguments, or breaking changes).
