@@ -8,4 +8,4 @@ updates:
       interval: daily
     # open-pull-requests-limit: 10
     labels: ['bot created', 'auto merge']
-    target-branch: devel
+    # target-branch: devel
