@@ -53,7 +53,7 @@ six==1.14.0
 sklearn==0.0
 threadpoolctl==2.1.0
 toml==0.10.2
-twine==3.3.0
+twine==3.4.1
 tzlocal==2.1
 urllib3==1.25.8
 wheel==0.36.2
