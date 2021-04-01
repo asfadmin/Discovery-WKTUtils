@@ -1,4 +1,4 @@
-name: Changelog updated?
+name: Update changelog on Releases
 on:
   pull_request:
     types:
@@ -10,7 +10,7 @@ on:
       - prod
 
 jobs:
-  changelog-udated:
+  changelog-updated:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
