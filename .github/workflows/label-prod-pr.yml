@@ -21,4 +21,4 @@ jobs:
         with:
           mode: exactly
           count: 1
-          labels: "major, minor, patch, bumpless" 
+          labels: "major, minor, patch, skip-release" 
