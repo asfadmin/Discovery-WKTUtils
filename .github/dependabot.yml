@@ -6,6 +6,6 @@ updates:
     directory: "/"
     schedule:
       interval: daily
-    open-pull-requests-limit: 100
+    open-pull-requests-limit: 4
     labels: ['bot created', 'auto merge']
-    # target-branch: devel
+    target-branch: prod
