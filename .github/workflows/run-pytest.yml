@@ -8,9 +8,9 @@ jobs:
     steps:
       # temp disabling, about to merge 30+ PR's, and don't want suite to
       # run for *every* single one of them:
-      run: echo "TEMP DISABLED"
+      - run: echo "TEMP DISABLED"
 
-      
+
       # # Get the code:
       # - uses: actions/checkout@v2
       # # Run the local action:
