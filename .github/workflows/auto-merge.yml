@@ -62,7 +62,7 @@ jobs:
       # Open PR to devel:
       - name: "Open PR to devel"
         uses: peter-evans/create-pull-request@v3.8.2
-        env:
+        with:
           token: ${{ secrets.BOT_TOKEN }}
           branch: ${{ github.event.pull_request.head.ref }}
           base: devel
