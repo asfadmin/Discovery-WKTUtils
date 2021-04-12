@@ -19,11 +19,13 @@ jobs:
     if: contains(github.event.pull_request.labels.*.name, 'auto merge')
     runs-on: ubuntu-latest
     steps:
+
       # If NOT on devel, wait for checks on SELF to finish:
       - name: 'Wait for status checks'
         if: github.event.pull_request.base.ref != 'devel'
         uses: "jitterbit/await-check-suites@v1"
         with:
+          ref: ${{ github.event.pull_request.head.sha }}
           intervalSeconds: 10
           timeoutSeconds: 300
 
