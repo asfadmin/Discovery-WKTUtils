@@ -1,0 +1,49 @@
+name: Auto merge PR's
+
+on:
+  pull_request:
+    types:
+      - opened
+      - labeled
+      - edited
+      - unlabeled
+      - synchronize
+      - reopened
+
+jobs:
+  automerge:
+    if: contains(github.event.pull_request.labels.*.name, 'auto merge')
+    runs-on: ubuntu-latest
+    steps:
+      # If NOT on prod, merge the branch:
+      - name: 'Merge to Branch'
+        if: github.ref != 'refs/heads/prod'
+        uses: "pascalgn/automerge-action@v0.13.1"
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          MERGE_LABELS: auto merge
+          UPDATE_LABELS: auto merge
+
+
+  # automerge:
+  #   runs-on: ubuntu-latest
+  #   if: >
+  #     (github.ref == 'refs/heads/devel' || github.ref == 'refs/heads/test')
+  #     && contains(github.event.pull_request.labels.*.name, 'auto merge')
+  #   steps:
+  #     - name: 'Wait for status checks'
+  #       id: waitforstatuschecks
+  #       uses: "WyriHaximus/github-action-wait-for-status@v2"
+  #       with:
+  #         # Which jobs to ignore (here, self):
+  #         ignoreActions: automerge
+  #       env:
+  #         GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+  #     - name: 'Merge'
+  #       uses: "pascalgn/automerge-action@v0.13.1"
+  #       if: steps.waitforstatuschecks.outputs.status == 'success'
+  #       env:
+  #         GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+  #         MERGE_LABELS: auto merge
+  #         UPDATE_LABELS: auto merge
+
