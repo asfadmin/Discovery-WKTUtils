@@ -65,8 +65,8 @@ jobs:
         uses: peter-evans/create-pull-request@v3.8.2
         with:
           token: ${{ secrets.BOT_TOKEN }}
-          branch: ${{ github.event.pull_request.head.ref }}
-          base: devel
+          branch: devel
+          base: ${{ github.event.pull_request.head.ref }}
           title: "Update from 'auto merge' used on prod branch"
           labels: 'auto merge'
 
