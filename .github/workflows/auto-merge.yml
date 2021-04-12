@@ -64,7 +64,7 @@ jobs:
 
       # Open PR to devel:
       - name: "Open PR to devel"
-        uses: peter-evans/create-pull-request@v3.8.2
+        uses: peter-evans/create-pull-request@v3.0.0
         with:
           token: ${{ secrets.BOT_TOKEN }}
           branch: devel
