@@ -10,14 +10,26 @@ on:
       - synchronize
       - reopened
 
+# Target branch: ${{ github.event.pull_request.base.ref }}
+# Source Branch: ${{ github.event.pull_request.head.ref }}
+
 jobs:
   automerge:
+    name: automerge
     if: contains(github.event.pull_request.labels.*.name, 'auto merge')
     runs-on: ubuntu-latest
     steps:
+      # If NOT on devel, wait for checks on SELF to finish:
+      - name: 'Wait for status checks'
+        if: github.event.pull_request.base.ref != 'devel'
+        uses: "jitterbit/await-check-suites@v1"
+        with:
+          intervalSeconds: 10
+          timeoutSeconds: 300
+
       # If NOT on prod, merge the branch:
       - name: 'Merge to Branch'
-        if: github.ref != 'refs/heads/prod'
+        if: github.event.pull_request.base.ref != 'prod'
         uses: "pascalgn/automerge-action@v0.13.1"
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
