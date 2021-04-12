@@ -40,17 +40,17 @@ jobs:
           steps.waitforstatuschecks.outputs.status != 'success'
         run: false
 
-      # Finally merge the PR:
-      - name: 'Merge to Branch'
-        uses: "pascalgn/automerge-action@v0.13.1"
-        env:
-          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-          MERGE_LABELS: auto merge
-          UPDATE_LABELS: auto merge
+      # # Finally merge the PR:
+      # - name: 'Merge to Branch'
+      #   uses: "pascalgn/automerge-action@v0.13.1"
+      #   env:
+      #     GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+      #     MERGE_LABELS: auto merge
+      #     UPDATE_LABELS: auto merge
 
   automerge-prod:
     if: >
-      ${{ github.event.pull_request.base.ref }} == 'prod' &&
+      github.event.pull_request.base.ref == 'prod' &&
       contains(github.event.pull_request.labels.*.name, 'auto merge')
     runs-on: ubuntu-latest
     steps:
