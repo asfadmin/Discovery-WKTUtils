@@ -15,6 +15,7 @@ on:
 
 jobs:
   automerge-nonprod:
+    name: Automerge [non-prod]
     if: >
       ${{ github.event.pull_request.base.ref }} != 'prod' &&
       contains(github.event.pull_request.labels.*.name, 'auto merge')
@@ -28,7 +29,7 @@ jobs:
         id: waitforstatuschecks
         with:
           checkInterval: 10
-          ignoreActions: automerge-nonprod
+          ignoreActions: "Automerge [non-prod]"
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
@@ -49,8 +50,9 @@ jobs:
           UPDATE_LABELS: auto merge
 
   automerge-prod:
+    name: Automerge [prod]
     if: >
-      ${{ github.event.pull_request.base.ref }} == 'prod' &&
+      github.event.pull_request.base.ref == 'prod' &&
       contains(github.event.pull_request.labels.*.name, 'auto merge')
     runs-on: ubuntu-latest
     steps:
