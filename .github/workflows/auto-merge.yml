@@ -20,11 +20,12 @@ jobs:
       - name: 'Wait for status checks'
         if: github.ref != 'refs/heads/devel'
         id: waitforstatuschecks
-        uses: "WyriHaximus/github-action-wait-for-status@v1.1.2"
+        uses: "WyriHaximus/github-action-wait-for-status@v1.3.0"
         with:
           # Which jobs to ignore (here, ignore self).
           # Add more csv style. "automerge,somethingElse":
           ignoreActions: automerge
+          checkInterval: 10
 
       # If NOT on prod, merge the branch:
       - name: 'Merge to Branch'
