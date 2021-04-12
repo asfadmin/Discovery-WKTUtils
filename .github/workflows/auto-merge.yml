@@ -56,7 +56,10 @@ jobs:
       contains(github.event.pull_request.labels.*.name, 'auto merge')
     runs-on: ubuntu-latest
     steps:
+      # Get the code:
+      - uses: actions/checkout@v2
 
+      # Open PR to devel:
       - name: "Open PR to devel"
         uses: peter-evans/create-pull-request@v3.8.2
         env:
