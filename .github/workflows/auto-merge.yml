@@ -24,9 +24,10 @@ jobs:
         if: github.event.pull_request.base.ref != 'devel'
         uses: "WyriHaximus/github-action-wait-for-status@v1.3"
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
           checkInterval: 10
           ignoreActions: automerge
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
       # If NOT on prod, merge the branch:
       - name: 'Merge to Branch'
