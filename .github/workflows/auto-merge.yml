@@ -11,14 +11,16 @@ on:
       - reopened
 
 # Target branch: ${{ github.event.pull_request.base.ref }}
-# Source Branch: ${{ github.event.pull_request.head.ref }}
+# Source branch: ${{ github.event.pull_request.head.ref }}
 
 jobs:
-  automerge:
-    if: contains(github.event.pull_request.labels.*.name, 'auto merge')
+  automerge-nonprod:
+    if: >
+      ${{ github.event.pull_request.base.ref }} != 'prod' &&
+      contains(github.event.pull_request.labels.*.name, 'auto merge')
     runs-on: ubuntu-latest
     steps:
-
+    
       # If NOT on devel, wait for checks on SELF to finish:
       - name: 'Wait for action suite'
         if: github.event.pull_request.base.ref != 'devel'
@@ -26,7 +28,7 @@ jobs:
         id: waitforstatuschecks
         with:
           checkInterval: 10
-          ignoreActions: automerge
+          ignoreActions: automerge-nonprod
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
@@ -38,13 +40,19 @@ jobs:
           steps.waitforstatuschecks.outputs.status != 'success'
         run: false
 
-      # If NOT on prod, merge the branch:
+      # Finally merge the PR:
       - name: 'Merge to Branch'
-        if: github.event.pull_request.base.ref != 'prod'
         uses: "pascalgn/automerge-action@v0.13.1"
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
           MERGE_LABELS: auto merge
           UPDATE_LABELS: auto merge
 
-
+  automerge-prod:
+    if: >
+      ${{ github.event.pull_request.base.ref }} == 'prod' &&
+      contains(github.event.pull_request.labels.*.name, 'auto merge')
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Testing only gets hit when merging to prod"
+        run: false
