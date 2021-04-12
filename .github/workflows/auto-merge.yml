@@ -58,7 +58,8 @@ jobs:
     steps:
       # Get the code:
       - uses: actions/checkout@v2
-
+      - run: echo ${{ github.event.pull_request.head.ref }}
+        name: double checking head ref
       # Open PR to devel:
       - name: "Open PR to devel"
         uses: peter-evans/create-pull-request@v3.8.2
