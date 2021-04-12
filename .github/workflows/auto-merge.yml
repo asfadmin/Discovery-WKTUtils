@@ -16,8 +16,10 @@ jobs:
     if: contains(github.event.pull_request.labels.*.name, 'auto merge')
     runs-on: ubuntu-latest
     steps:
-      - name: 'Test getting target branch of PR'
+      - name: 'Gets source target branch of PR'
         run: echo ${{ github.event.pull_request.head.ref }}
+      - name: 'Test getting target branch of PR'
+        run: echo ${{ github.event.pull_request.base.ref }}
       # # If NOT on devel, wait for checks on SELF to finish:
       # - name: 'Wait for status checks'
       #   if: github.ref != 'refs/heads/devel'
