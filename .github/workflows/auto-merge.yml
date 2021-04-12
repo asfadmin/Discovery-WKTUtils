@@ -56,5 +56,12 @@ jobs:
       contains(github.event.pull_request.labels.*.name, 'auto merge')
     runs-on: ubuntu-latest
     steps:
-      - name: "Testing only gets hit when merging to prod"
-        run: false
+
+      - name: "Open PR to devel"
+        uses: peter-evans/create-pull-request@v3.8.2
+        env:
+          branch: ${{ github.event.pull_request.head.ref }}
+          base: devel
+          title: "Update from 'auto merge' used on prod branch"
+          labels: 'auto merge'
+
