@@ -1,6 +1,6 @@
 name: Run test suite
 
-on: [pull_request, push]
+on: [pull_request]
 
 jobs:
   run-tests:
@@ -12,3 +12,5 @@ jobs:
       - uses: ./.github/actions/pytest-automation
         with:
           PYTEST_OPTIONS: -n auto
+      - name: "Force fail, to see if auto merge blocks correctly"
+        run: "false"
