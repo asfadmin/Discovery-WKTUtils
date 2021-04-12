@@ -20,14 +20,20 @@ jobs:
     steps:
 
       # If NOT on devel, wait for checks on SELF to finish:
-      - name: 'Wait for status checks'
+      - name: 'Wait for action suite'
         if: github.event.pull_request.base.ref != 'devel'
         uses: "WyriHaximus/github-action-wait-for-status@v1.3"
+        id: waitforstatuschecks
         with:
           checkInterval: 10
           ignoreActions: automerge
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
+      # If something in the suite FAILED, break off now:
+      - name: 'Check success of action suite'
+        if: steps.waitforstatuschecks.outputs.status != 'success'
+        run: false
 
       # If NOT on prod, merge the branch:
       - name: 'Merge to Branch'
