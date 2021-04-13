@@ -62,24 +62,13 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.ref }}
 
-
       # Open PR to devel:
       - name: "Open PR to devel"
-        uses: gr2m/create-or-update-pull-request-action@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.BOT_TOKEN }}
+        uses: peter-evans/create-pull-request@v3.8.2
         with:
+          token: ${{ secrets.BOT_TOKEN }}
           branch: devel
+          base: ${{ github.event.pull_request.head.ref }}
           title: "Update from 'auto merge' used on prod branch"
           labels: 'auto merge'
-
-      # # Open PR to devel:
-      # - name: "Open PR to devel"
-      #   uses: peter-evans/create-pull-request@v3.8.2
-      #   with:
-      #     token: ${{ secrets.BOT_TOKEN }}
-      #     branch: devel
-      #     base: ${{ github.event.pull_request.head.ref }}
-      #     title: "Update from 'auto merge' used on prod branch"
-      #     labels: 'auto merge'
 
