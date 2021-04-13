@@ -64,13 +64,14 @@ jobs:
 
 
       # Open PR to devel:
-      uses: gr2m/create-or-update-pull-request-action@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.BOT_TOKEN }}
-      with:
-        branch: devel
-        title: "Update from 'auto merge' used on prod branch"
-        labels: 'auto merge'
+      - name: "Open PR to devel"
+        uses: gr2m/create-or-update-pull-request-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.BOT_TOKEN }}
+        with:
+          branch: devel
+          title: "Update from 'auto merge' used on prod branch"
+          labels: 'auto merge'
 
       # # Open PR to devel:
       # - name: "Open PR to devel"
