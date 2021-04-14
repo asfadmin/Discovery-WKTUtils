@@ -62,10 +62,10 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.ref }}
       # 
-      - name: Reset devel branch
+      - name: Reset branch ${{ github.event.pull_request.head.ref }}
         run: |
-          git fetch origin devel:devel
-          git reset --hard devel
+          git fetch origin ${{ github.event.pull_request.head.ref }}:${{ github.event.pull_request.head.ref }}
+          git reset --hard ${{ github.event.pull_request.head.ref }}
       # Open PR to devel:
       - name: "Open PR to devel"
         uses: peter-evans/create-pull-request@v3.8.2
