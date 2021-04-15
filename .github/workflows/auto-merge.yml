@@ -63,7 +63,8 @@ jobs:
       # Change what is in the PR
       - name: Reset branch ${{ github.event.pull_request.head.ref }}
         run: |
-          git checkout origin devel
+          git status
+          git branch -a
           git fetch origin ${{ github.event.pull_request.head.ref }}:${{ github.event.pull_request.head.ref }}
           git reset --hard ${{ github.event.pull_request.head.ref }}
 
