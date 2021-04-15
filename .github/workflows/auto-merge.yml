@@ -92,12 +92,14 @@ jobs:
         name: Save the latest commit
         id: get-latest-commit
         run: echo "::set-output name=commit::$(git rev-parse HEAD)"
-        
-      - run: echo ${{ steps.get-latest-commit.outputs.commit }}
 
-      # - if: ${{ matrix.merge_to_branch }} == 'test'
-      #   name: Wait for test to finish
-      #   uses: jitterbit/await-check-suites@v1
+      - if: ${{ matrix.merge_to_branch }} == 'test'
+        name: Wait for test to finish
+        uses: jitterbit/await-check-suites@v1
+        with:
+          ref: ${{ steps.get-latest-commit.outputs.commit }}
+          intervalSeconds: 10
+          timeoutSeconds: 300
       
       # TODO:
       # take off auto merge label
