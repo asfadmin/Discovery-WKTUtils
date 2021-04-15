@@ -30,14 +30,13 @@ jobs:
           ignoreActions: "Automerge [non-prod]"
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-
       # If something in the suite FAILED, break off now:
       - name: 'Check success of action suite'
         # special catch for devel, since it doesn't need to wait to merge
         if: github.event.pull_request.base.ref != 'devel'
         run: "[[ \"${{ steps.waitforstatuschecks.outputs.status }}\" == 'success' ]]"
 
-      # Finally merge the PR:
+      # For all branches, merge the PR:
       - name: 'Merge to Branch'
         uses: "pascalgn/automerge-action@v0.13.1"
         env:
