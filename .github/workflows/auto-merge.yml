@@ -53,12 +53,15 @@ jobs:
       github.event.pull_request.base.ref == 'prod' &&
       contains(github.event.pull_request.labels.*.name, 'auto merge')
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        merge_to_branch: [devel, test]
     steps:
 
       # Setup Git:
       - uses: actions/checkout@v2
         with:
-          ref: devel
+          ref: ${{ matrix.merge_to_branch }}
 
       # Change what is in the PR
       - name: Reset branch to ${head_of_pr}
@@ -68,13 +71,13 @@ jobs:
         env:
           head_of_pr: ${{ github.event.pull_request.head.ref }}
 
-      # Open PR to devel:
-      - name: "Open PR to devel"
+      # Open PR to target branch:
+      - name: "Open PR to ${{ matrix.merge_to_branch }}"
         uses: peter-evans/create-pull-request@v3.8.2
         with:
           token: ${{ secrets.BOT_TOKEN }}
           branch: ${{ github.event.pull_request.head.ref }}
-          base: devel
+          base: ${{ matrix.merge_to_branch }}
           title: "Bringing update back from prod branch"
           # Taking off automerge temp, to track what's happening easier:
           labels: 'dependancies'
