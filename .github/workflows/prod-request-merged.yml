@@ -9,8 +9,8 @@ on:
 jobs:
   OpenRequest:
     runs-on: ubuntu-latest
-    # If a merge request triggered the push, and that request DOESN'T contain the 'bumpless' label.
-    # (Need to check all three, instead of 'not bumpless', because if and admin overrides the tests,
+    # If a merge request triggered the push, and that request DOESN'T contain the 'skip-release' label.
+    # (Need to check all three, instead of 'not skip-release', because if and admin overrides the tests,
     #   it might not have ANY labels at that point.).
     if: >
       github.event.pull_request.merged &&
