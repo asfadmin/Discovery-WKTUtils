@@ -78,8 +78,14 @@ jobs:
           token: ${{ secrets.BOT_TOKEN }}
           branch: ${{ github.event.pull_request.head.ref }}
           base: ${{ matrix.merge_to_branch }}
-          title: "Bringing update back from prod branch"
+          title: "Automatic merge triggered from ${{ github.event.pull_request.head.ref }} to ${{ matrix.merge_to_branch }}"
           # Taking off automerge temp, to track what's happening easier:
           labels: 'dependancies'
           # labels: 'auto merge, dependancies'
+      
+      # See which one of these, is the commit I need:
+      - run: git rev-parse HEAD # Guessing this one, but not %100
+      - run: git rev-parse ${{ github.event.pull_request.head.ref }}
+      - run: git rev-parse ${{ matrix.merge_to_branch }}
+      
 
