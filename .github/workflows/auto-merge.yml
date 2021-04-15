@@ -57,15 +57,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-      # Get the code:
+      # Checkout the Devel Branch:
       - uses: actions/checkout@v2
         with:
-          ref: ${{ github.event.pull_request.head.ref }}
-      # 
+          ref: devel
+
+      # Change what is in the PR
       - name: Reset branch ${{ github.event.pull_request.head.ref }}
         run: |
           git fetch origin ${{ github.event.pull_request.head.ref }}:${{ github.event.pull_request.head.ref }}
           git reset --hard ${{ github.event.pull_request.head.ref }}
+
       # Open PR to devel:
       - name: "Open PR to devel"
         uses: peter-evans/create-pull-request@v3.8.2
