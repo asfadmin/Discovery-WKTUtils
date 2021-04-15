@@ -61,10 +61,12 @@ jobs:
           ref: devel
 
       # Change what is in the PR
-      - name: Reset branch to ${{ github.event.pull_request.head.ref }}
+      - name: Reset branch to ${head_of_pr}
         run: |
-          git fetch origin ${{ github.event.pull_request.head.ref }}:${{ github.event.pull_request.head.ref }}
-          git reset --hard ${{ github.event.pull_request.head.ref }}
+          git fetch origin ${head_of_pr}:${head_of_pr}
+          git reset --hard ${head_of_pr}
+        env:
+          head_of_pr: ${{ github.event.pull_request.head.ref }}
 
       # Open PR to devel:
       - name: "Open PR to devel"
@@ -74,5 +76,7 @@ jobs:
           branch: ${{ github.event.pull_request.head.ref }}
           base: devel
           title: "Bringing update back from prod branch"
-          labels: 'auto merge, dependancies'
+          # Taking off automerge temp, to track what's happening easier:
+          labels: 'dependancies'
+          # labels: 'auto merge, dependancies'
 
