@@ -1,0 +1,47 @@
+name: Auto merge PR's
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - labeled
+      - unlabeled
+      - edited
+      - synchronize
+    # auto-merge-prod has 'branches' here
+    branches-ignore:
+      - prod
+
+jobs:
+  automerge-nonprod:
+    name: Automerge [non-prod]
+    if: contains(github.event.pull_request.labels.*.name, 'auto merge')
+    runs-on: ubuntu-latest
+    steps:
+    
+      # If NOT on devel, wait for checks on SELF to finish:
+      - name: 'Wait for action suite'
+        if: github.event.pull_request.base.ref != 'devel'
+        uses: "WyriHaximus/github-action-wait-for-status@v1.3"
+        id: waitforstatuschecks
+        with:
+          checkInterval: 10
+          ignoreActions: "Automerge [non-prod]"
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
+      # If something in the suite FAILED, break off now:
+      - name: 'Check success of action suite'
+        # special catch for devel, since it doesn't need to wait to merge
+        if: github.event.pull_request.base.ref != 'devel'
+        run: "[[ \"${{ steps.waitforstatuschecks.outputs.status }}\" == 'success' ]]"
+
+      # Finally merge the PR:
+      - name: 'Merge to Branch'
+        uses: "pascalgn/automerge-action@v0.13.1"
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          MERGE_LABELS: auto merge
+          UPDATE_LABELS: auto merge
+
