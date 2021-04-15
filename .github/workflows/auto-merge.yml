@@ -36,10 +36,8 @@ jobs:
       # If something in the suite FAILED, break off now:
       - name: 'Check success of action suite'
         # special catch for devel, since it doesn't need to wait to merge
-        if: >
-          github.event.pull_request.base.ref != 'devel' &&
-          steps.waitforstatuschecks.outputs.status != 'success'
-        run: false
+        if: github.event.pull_request.base.ref != 'devel'
+        run: "[[ \"${{ steps.waitforstatuschecks.outputs.status }}\" == 'success' ]]"
 
       # Finally merge the PR:
       - name: 'Merge to Branch'
@@ -72,7 +70,7 @@ jobs:
         with:
           token: ${{ secrets.BOT_TOKEN }}
           # branch: devel
-          branch: ${{ github.event.pull_request.head.ref }}
+          branch: ${{ github.event.pull_request.head.ref }}-new
           base: devel
           title: "Update from 'auto merge' used on prod branch"
           labels: 'auto merge'
