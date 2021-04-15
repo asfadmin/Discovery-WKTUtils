@@ -60,19 +60,20 @@ jobs:
       # Checkout the Devel Branch:
       - uses: actions/checkout@v2
         with:
-          ref: devel
+          ref: ${{ github.event.pull_request.head.ref }}
 
       # Change what is in the PR
-      - name: Reset branch ${{ github.event.pull_request.head.ref }}
+      - name: Reset branch devel
         run: |
-          git fetch origin ${{ github.event.pull_request.head.ref }}:${{ github.event.pull_request.head.ref }}
-          git reset --hard ${{ github.event.pull_request.head.ref }}
+          git fetch origin devel:devel
+          git reset --hard devel
 
       # Open PR to devel:
       - name: "Open PR to devel"
         uses: peter-evans/create-pull-request@v3.8.2
         with:
           token: ${{ secrets.BOT_TOKEN }}
+          # branch: devel
           branch: ${{ github.event.pull_request.head.ref }}
           base: devel
           title: "Update from 'auto merge' used on prod branch"
