@@ -53,12 +53,12 @@ jobs:
       # if: ${{ matrix.merge_to_branch }} == 'test'
 
 
-      - if: ${{ matrix.merge_to_branch }} == 'test'
+      - if: matrix.merge_to_branch == 'test'
         name: Save the latest commit
         id: get-latest-commit
         run: echo "::set-output name=commit::$(git rev-parse HEAD)"
 
-      - if: ${{ matrix.merge_to_branch }} == 'test'
+      - if: matrix.merge_to_branch == 'test'
         name: Wait for test to finish
         uses: jitterbit/await-check-suites@v1
         with:
