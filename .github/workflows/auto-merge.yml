@@ -83,9 +83,24 @@ jobs:
           labels: 'dependancies'
           # labels: 'auto merge, dependancies'
       
-      # See which one of these, is the commit I need:
-      - run: git rev-parse HEAD # Guessing this one, but not %100
-      - run: git rev-parse ${{ github.event.pull_request.head.ref }}
-      - run: git rev-parse ${{ matrix.merge_to_branch }}
+      ### NOTE: Rest of actions only run on test branch
+      # If you add more after this point, make sure it has:
+      # if: ${{ matrix.merge_to_branch }} == 'test'
+
+
+      - if: ${{ matrix.merge_to_branch }} == 'test'
+        name: Save the latest commit
+        id: get-latest-commit
+        run: echo "::set-output name=commit::$(git rev-parse HEAD)"
+        
+      - run: echo ${{ steps.get-latest-commit.outputs.commit }}
+
+      # - if: ${{ matrix.merge_to_branch }} == 'test'
+      #   name: Wait for test to finish
+      #   uses: jitterbit/await-check-suites@v1
       
+      # TODO:
+      # take off auto merge label
+      # Assign reviewers
+
 
