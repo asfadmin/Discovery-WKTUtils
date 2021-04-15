@@ -57,10 +57,14 @@ jobs:
 
       # Setup Git:
       - uses: actions/checkout@v2
+        with:
+          ref: devel
 
       # Change what is in the PR
-      - name: Reset branch ${{ github.event.pull_request.head.ref }}
+      - name: Reset branch to ${{ github.event.pull_request.head.ref }}
         run: |
+          git branch -a
+          git status
           git fetch origin ${{ github.event.pull_request.head.ref }}:${{ github.event.pull_request.head.ref }}
           git reset --hard ${{ github.event.pull_request.head.ref }}
 
@@ -69,8 +73,7 @@ jobs:
         uses: peter-evans/create-pull-request@v3.8.2
         with:
           token: ${{ secrets.BOT_TOKEN }}
-          # branch: devel
-          branch: ${{ github.event.pull_request.head.ref }}-new
+          branch: ${{ github.event.pull_request.head.ref }}
           base: devel
           title: "Update from 'auto merge' used on prod branch"
           labels: 'auto merge'
