@@ -57,7 +57,8 @@ jobs:
         id: waitforstatuschecks
         with:
           checkInterval: 10
-          ignoreActions: "Automerge [prod]"
+          # Ignore the action, with the right matrix label:
+          ignoreActions: "Automerge [prod] (${{ matrix.merge_to_branch }})"
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
       - if: matrix.merge_to_branch == 'test'
