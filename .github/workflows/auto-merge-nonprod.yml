@@ -9,14 +9,13 @@ on:
       - unlabeled
       - edited
       - synchronize
-    # auto-merge-prod has 'branches' here
-    branches-ignore:
-      - prod
 
 jobs:
   automerge-nonprod:
     name: Automerge [non-prod]
-    if: contains(github.event.pull_request.labels.*.name, 'auto merge')
+    if: >
+      github.event.pull_request.base.ref != 'prod' &&
+      contains(github.event.pull_request.labels.*.name, 'auto merge')
     runs-on: ubuntu-latest
     steps:
     

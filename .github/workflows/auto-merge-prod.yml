@@ -9,14 +9,13 @@ on:
       - unlabeled
       - edited
       - synchronize
-    # auto-merge-prod has 'branches-ignore' here
-    branches:
-      - prod
 
 jobs:
   automerge:
     name: Automerge [prod]
-    if: contains(github.event.pull_request.labels.*.name, 'auto merge')
+    if: >
+      github.event.pull_request.base.ref == 'prod' &&
+      contains(github.event.pull_request.labels.*.name, 'auto merge')
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -62,12 +61,15 @@ jobs:
         name: Wait for test to finish
         uses: jitterbit/await-check-suites@v1
         with:
+          author: ASF-Discovery <uaf-asf-discovery@alaska.edu>
           ref: ${{ steps.get-latest-commit.outputs.commit }}
           intervalSeconds: 10
           timeoutSeconds: 300
+          failStepIfUnsuccessful: true
       
       # TODO:
       # take off auto merge label
       # Assign reviewers
+
 
 
