@@ -54,4 +54,3 @@ toml==0.10.2
 tzlocal==2.1
 urllib3==1.25.8
 webencodings==0.5.1
-WKTUtils===v0.2.0-135-ga0983e2
