@@ -18,9 +18,12 @@ jobs:
       - uses: actions/checkout@v1
 
       - name: Changelog check
+        # Use an if, instead of noChagneLogLabel, so that this workflow succeds instead
+        # of ignore. (Important when checking if a suite on a commit was successful)
+        if: "!contains(github.event.pull_request.labels.*.name, 'skip-release')"
         uses: Zomzog/changelog-checker@v1.2.0
         with:
           fileName: CHANGELOG.md
-          noChangelogLabel: skip-release
+          # noChangelogLabel: skip-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

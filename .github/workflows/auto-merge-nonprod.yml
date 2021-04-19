@@ -10,9 +10,6 @@ on:
       - edited
       - synchronize
 
-# Target branch: ${{ github.event.pull_request.base.ref }}
-# Source branch: ${{ github.event.pull_request.head.ref }}
-
 jobs:
   automerge-nonprod:
     name: Automerge [non-prod]
@@ -32,47 +29,17 @@ jobs:
           ignoreActions: "Automerge [non-prod]"
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-
       # If something in the suite FAILED, break off now:
       - name: 'Check success of action suite'
         # special catch for devel, since it doesn't need to wait to merge
         if: github.event.pull_request.base.ref != 'devel'
         run: "[[ \"${{ steps.waitforstatuschecks.outputs.status }}\" == 'success' ]]"
 
-      # Finally merge the PR:
+      # For all branches, merge the PR:
       - name: 'Merge to Branch'
         uses: "pascalgn/automerge-action@v0.13.1"
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
           MERGE_LABELS: auto merge
           UPDATE_LABELS: auto merge
-
-  automerge-prod:
-    name: Automerge [prod]
-    if: >
-      github.event.pull_request.base.ref == 'prod' &&
-      contains(github.event.pull_request.labels.*.name, 'auto merge')
-    runs-on: ubuntu-latest
-    steps:
-
-      # Setup Git:
-      - uses: actions/checkout@v2
-        with:
-          ref: devel
-
-      # Change what is in the PR
-      - name: Reset branch to ${{ github.event.pull_request.head.ref }}
-        run: |
-          git fetch origin ${{ github.event.pull_request.head.ref }}:${{ github.event.pull_request.head.ref }}
-          git reset --hard ${{ github.event.pull_request.head.ref }}
-
-      # Open PR to devel:
-      - name: "Open PR to devel"
-        uses: peter-evans/create-pull-request@v3.8.2
-        with:
-          token: ${{ secrets.BOT_TOKEN }}
-          branch: ${{ github.event.pull_request.head.ref }}
-          base: devel
-          title: "Bringing update back from prod branch"
-          labels: 'auto merge, dependancies'
 
