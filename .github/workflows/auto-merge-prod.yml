@@ -39,13 +39,13 @@ jobs:
       - name: "Open PR to ${{ matrix.merge_to_branch }}"
         uses: peter-evans/create-pull-request@v3.8.2
         with:
+          # Let bot open the PR, so auto merge can trigger
           token: ${{ secrets.BOT_TOKEN }}
+          labels: 'auto merge, dependancies'
+          # Open from wherever the PR was from, to each base branch:
           branch: ${{ github.event.pull_request.head.ref }}
           base: ${{ matrix.merge_to_branch }}
           title: "Automatic merge triggered from ${{ github.event.pull_request.head.ref }} to ${{ matrix.merge_to_branch }}"
-          # Taking off automerge temp, to track what's happening easier:
-          labels: 'dependancies'
-          # labels: 'auto merge, dependancies'
       
       ### NOTE: Rest of actions only run on test branch
       # If you add more after this point, make sure it has:
@@ -61,23 +61,10 @@ jobs:
           ignoreActions: "Automerge [prod] (${{ matrix.merge_to_branch }})"
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
       - if: matrix.merge_to_branch == 'test'
         name: 'Check success of action suite'  
         run: "[[ \"${{ steps.waitforstatuschecks.outputs.status }}\" == 'success' ]]"
-
-      # - if: matrix.merge_to_branch == 'test'
-      #   name: Save the latest commit
-      #   id: get-latest-commit
-      #   run: echo "::set-output name=commit::$(git rev-parse HEAD)"
-
-      # - if: matrix.merge_to_branch == 'test'
-      #   name: Wait for test to finish
-      #   uses: jitterbit/await-check-suites@v1
-      #   with:
-      #     ref: ${{ steps.get-latest-commit.outputs.commit }}
-      #     intervalSeconds: 10
-      #     timeoutSeconds: 300
-      #     failStepIfUnsuccessful: true
       
       # TODO:
       # take off auto merge label
