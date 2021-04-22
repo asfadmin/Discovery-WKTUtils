@@ -54,7 +54,7 @@ jobs:
       run: |
         git fetch --prune
         git checkout devel && git pull --ff-only
-        git merge --ff-only origin/prod
+        git merge --ff-only origin/prod --allow-unrelated-histories
         git push
 
     # Open a PR, if the vanilla pull failed
