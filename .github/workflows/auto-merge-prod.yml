@@ -46,7 +46,9 @@ jobs:
           branch: ${{ github.event.pull_request.head.ref }}
           base: ${{ matrix.merge_to_branch }}
           title: "Automatic merge triggered from ${{ github.event.pull_request.head.ref }} to ${{ matrix.merge_to_branch }}"
-      
+          committer: ASF-Discovery <uaf-asf-discovery@alaska.edu>
+          author: ASF-Discovery <uaf-asf-discovery@alaska.edu>
+
       ### NOTE: Rest of actions only run on test branch
       # If you add more after this point, make sure it has:
       # if: ${{ matrix.merge_to_branch }} == 'test'
