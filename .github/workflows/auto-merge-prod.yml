@@ -51,7 +51,7 @@ jobs:
       # Waiting here on devel too, just to guantee we don't hit any timing errors:
       - name: 'Wait for action suite'
         uses: "WyriHaximus/github-action-wait-for-status@v1.3"
-        id: waitforstatuschecks
+        id: waitforstatuscheckdevel
         with:
           checkInterval: 10
           # Ignore the action, with the right matrix label:
@@ -60,7 +60,7 @@ jobs:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
       - name: 'Check success of action suite'  
-        run: "[[ \"${{ steps.waitforstatuschecks.outputs.status }}\" == 'success' ]]"
+        run: "[[ \"${{ steps.waitforstatuscheckdevel.outputs.status }}\" == 'success' ]]"
 
       ##############
       #### TEST ####
@@ -92,7 +92,7 @@ jobs:
 
       - name: 'Wait for action suite'
         uses: "WyriHaximus/github-action-wait-for-status@v1.3"
-        id: waitforstatuschecks
+        id: waitforstatuschecktest
         with:
           checkInterval: 10
           # Ignore the action, with the right matrix label:
@@ -101,7 +101,7 @@ jobs:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
       - name: 'Check success of action suite'  
-        run: "[[ \"${{ steps.waitforstatuschecks.outputs.status }}\" == 'success' ]]"
+        run: "[[ \"${{ steps.waitforstatuschecktest.outputs.status }}\" == 'success' ]]"
 
 
 
