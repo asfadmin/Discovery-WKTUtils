@@ -17,16 +17,17 @@ jobs:
       github.event.pull_request.base.ref == 'prod' &&
       contains(github.event.pull_request.labels.*.name, 'auto merge')
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        merge_to_branch: [devel, test]
+    # strategy:
+    #   matrix:
+    #     merge_to_branch: [devel, test]
     steps:
-
+      ###############
+      #### DEVEL ####
+      ###############
       # Setup Git:
       - uses: actions/checkout@v2
         with:
-          ref: ${{ matrix.merge_to_branch }}
-
+          ref: devel
       # Change what is in the PR
       - name: Reset branch to ${head_of_pr}
         run: |
@@ -34,9 +35,8 @@ jobs:
           git reset --hard ${head_of_pr}
         env:
           head_of_pr: ${{ github.event.pull_request.head.ref }}
-
       # Open PR to target branch:
-      - name: "Open PR to ${{ matrix.merge_to_branch }}"
+      - name: "Open PR to devel"
         uses: peter-evans/create-pull-request@v3.8.2
         with:
           # Let bot open the PR, so auto merge can trigger
@@ -44,33 +44,122 @@ jobs:
           labels: 'auto merge, dependancies'
           # Open from wherever the PR was from, to each base branch:
           branch: ${{ github.event.pull_request.head.ref }}
-          base: ${{ matrix.merge_to_branch }}
-          title: "Automatic merge triggered from ${{ github.event.pull_request.head.ref }} to ${{ matrix.merge_to_branch }}"
+          base: devel
+          title: "Automatic merge triggered from ${{ github.event.pull_request.head.ref }} to devel"
           committer: ASF-Discovery <uaf-asf-discovery@alaska.edu>
           author: ASF-Discovery <uaf-asf-discovery@alaska.edu>
-
-      ### NOTE: Rest of actions only run on test branch
-      # If you add more after this point, make sure it has:
-      # if: ${{ matrix.merge_to_branch }} == 'test'
-
-      - if: matrix.merge_to_branch == 'test'
-        name: 'Wait for action suite'
+      # Waiting here on devel too, just to guantee we don't hit any timing errors:
+      - name: 'Wait for action suite'
         uses: "WyriHaximus/github-action-wait-for-status@v1.3"
         id: waitforstatuschecks
         with:
           checkInterval: 10
           # Ignore the action, with the right matrix label:
-          ignoreActions: "Automerge [prod] (${{ matrix.merge_to_branch }})"
+          ignoreActions: "Automerge [prod]"
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
-      - if: matrix.merge_to_branch == 'test'
-        name: 'Check success of action suite'  
+      - name: 'Check success of action suite'  
         run: "[[ \"${{ steps.waitforstatuschecks.outputs.status }}\" == 'success' ]]"
+
+      ##############
+      #### TEST ####
+      ##############
+      # Setup Git:
+      - uses: actions/checkout@v2
+        with:
+          ref: test
+      # Change what is in the PR
+      - name: Reset branch to ${head_of_pr}
+        run: |
+          git fetch origin ${head_of_pr}:${head_of_pr}
+          git reset --hard ${head_of_pr}
+        env:
+          head_of_pr: ${{ github.event.pull_request.head.ref }}
+      # Open PR to target branch:
+      - name: "Open PR to test"
+        uses: peter-evans/create-pull-request@v3.8.2
+        with:
+          # Let bot open the PR, so auto merge can trigger
+          token: ${{ secrets.BOT_TOKEN }}
+          labels: 'auto merge, dependancies'
+          # Open from wherever the PR was from, to each base branch:
+          branch: ${{ github.event.pull_request.head.ref }}
+          base: test
+          title: "Automatic merge triggered from ${{ github.event.pull_request.head.ref }} to test"
+          committer: ASF-Discovery <uaf-asf-discovery@alaska.edu>
+          author: ASF-Discovery <uaf-asf-discovery@alaska.edu>
+
+      - name: 'Wait for action suite'
+        uses: "WyriHaximus/github-action-wait-for-status@v1.3"
+        id: waitforstatuschecks
+        with:
+          checkInterval: 10
+          # Ignore the action, with the right matrix label:
+          ignoreActions: "Automerge [prod]"
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: 'Check success of action suite'  
+        run: "[[ \"${{ steps.waitforstatuschecks.outputs.status }}\" == 'success' ]]"
+
+
+
+
+
+
+
+
+      ##### MATRIX SETUP, removed while testing sequential aproch
+      # # Setup Git:
+      # - uses: actions/checkout@v2
+      #   with:
+      #     ref: ${{ matrix.merge_to_branch }}
+
+      # # Change what is in the PR
+      # - name: Reset branch to ${head_of_pr}
+      #   run: |
+      #     git fetch origin ${head_of_pr}:${head_of_pr}
+      #     git reset --hard ${head_of_pr}
+      #   env:
+      #     head_of_pr: ${{ github.event.pull_request.head.ref }}
+
+      # # Open PR to target branch:
+      # - name: "Open PR to ${{ matrix.merge_to_branch }}"
+      #   uses: peter-evans/create-pull-request@v3.8.2
+      #   with:
+      #     # Let bot open the PR, so auto merge can trigger
+      #     token: ${{ secrets.BOT_TOKEN }}
+      #     labels: 'auto merge, dependancies'
+      #     # Open from wherever the PR was from, to each base branch:
+      #     branch: ${{ github.event.pull_request.head.ref }}
+      #     base: ${{ matrix.merge_to_branch }}
+      #     title: "Automatic merge triggered from ${{ github.event.pull_request.head.ref }} to ${{ matrix.merge_to_branch }}"
+      #     committer: ASF-Discovery <uaf-asf-discovery@alaska.edu>
+      #     author: ASF-Discovery <uaf-asf-discovery@alaska.edu>
+
+      # ### NOTE: Rest of actions only run on test branch
+      # # If you add more after this point, make sure it has:
+      # # if: ${{ matrix.merge_to_branch }} == 'test'
+
+      # - if: matrix.merge_to_branch == 'test'
+      #   name: 'Wait for action suite'
+      #   uses: "WyriHaximus/github-action-wait-for-status@v1.3"
+      #   id: waitforstatuschecks
+      #   with:
+      #     checkInterval: 10
+      #     # Ignore the action, with the right matrix label:
+      #     ignoreActions: "Automerge [prod] (${{ matrix.merge_to_branch }})"
+      #   env:
+      #     GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
+      # - if: matrix.merge_to_branch == 'test'
+      #   name: 'Check success of action suite'  
+      #   run: "[[ \"${{ steps.waitforstatuschecks.outputs.status }}\" == 'success' ]]"
       
-      # TODO:
-      # take off auto merge label
-      # Assign reviewers
+      # # TODO:
+      # # take off auto merge label
+      # # Assign reviewers
 
 
 
