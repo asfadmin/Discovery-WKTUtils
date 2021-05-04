@@ -26,7 +26,8 @@ jobs:
         id: waitforstatuschecks
         with:
           checkInterval: 10
-          ignoreActions: "Automerge [non-prod], Automerge [prod]"
+          # Not sure exactly what this checks (conflicting answers), so just adding everything to debug:
+          ignoreActions: "Automerge [non-prod], Automerge [prod], automerge-nonprod, automerge"
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
       # If something in the suite FAILED, break off now:

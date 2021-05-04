@@ -55,7 +55,7 @@ jobs:
         with:
           checkInterval: 10
           # Ignore the action, with the right matrix label:
-          ignoreActions: "Automerge [prod]"
+          ignoreActions: "Automerge [prod], automerge"
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
