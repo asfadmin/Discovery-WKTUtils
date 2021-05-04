@@ -25,3 +25,4 @@ f = open("path/to/file.shp", "rb")
 # NOTE: f can be a list of files too. filesToWKT([f1, f2, ...]).getWKT()
 wkt = filesToWKT(f).getWKT()
 ```
+
