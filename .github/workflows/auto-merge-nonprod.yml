@@ -1,4 +1,4 @@
-name: Auto merge PR's
+name: Auto merge PR's (non-prod)
 
 on:
   pull_request:
@@ -27,7 +27,7 @@ jobs:
         with:
           checkInterval: 10
           # Not sure exactly what this checks (conflicting answers), so just adding everything to debug:
-          ignoreActions: "Automerge [non-prod],Automerge [prod],automerge-nonprod,automerge,Automerge [non-prod] (pull_request),Automerge [prod] (pull_request)"
+          ignoreActions: "Automerge [non-prod],Automerge [prod]"
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
       # If something in the suite FAILED, break off now:
