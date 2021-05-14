@@ -100,7 +100,7 @@ jobs:
         uses: rowi1de/auto-assign-review-teams@v1.0.1
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-          teams: Discovery Admin
+          teams: discovery-admin
 
 
 
