@@ -96,13 +96,3 @@ jobs:
         with:
           labels: auto merge
           github_token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: "Assign Reviewers"
-        uses: nikosmoum/auto-assign-reviewer-team@v0.5
-        with:
-          githubToken: ${{ secrets.GITHUB_TOKEN }}
-          teamName: discovery-admin
-
-
-
-
