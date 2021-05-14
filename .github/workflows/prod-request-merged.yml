@@ -42,35 +42,3 @@ jobs:
         tag_schema: semantic
         draft: false
         prerelease: false
-
-
-  ### Removing temperarly, while I can get the automerge thing working.
-  ### Something's buggy with this always skipping to open a PR
-  # # Tell devel that the merge happened:
-  # UpdateDevel:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #   - uses: actions/checkout@v2
-
-  #   - name: Attempt fast-forward devel from prod
-  #     run: |
-  #       git fetch --prune
-  #       git checkout devel && git pull --ff-only
-  #       git merge --ff-only origin/prod --allow-unrelated-histories
-  #       git push
-
-  #   # Open a PR, if the vanilla pull failed
-  #   - name: Open PR to bring main back to devel
-  #     if: ${{ failure() }}
-  #     uses: repo-sync/pull-request@v2
-  #     with:
-  #       source_branch: prod
-  #       destination_branch: devel
-  #       pr_title: Pulling ${{ github.ref }} into devel
-  #       pr_body: Fast-forward of prod to devel failed!
-  #       pr_assignee: ${{ github.actor }}
-  #       pr_label: bot created
-  #       pr_draft: false
-  #       pr_allow_empty: true
-  #       github_token: ${{ secrets.GITHUB_TOKEN }} # Built in token
-
