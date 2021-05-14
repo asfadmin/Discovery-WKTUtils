@@ -98,10 +98,10 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: "Assign Reviewers"
-        uses: rowi1de/auto-assign-review-teams@v1.0.1
+        uses: nikosmoum/auto-assign-reviewer-team@v0.5
         with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          teams: asfadmin/discovery-admin
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          teamName: discovery-admin
 
 
 
