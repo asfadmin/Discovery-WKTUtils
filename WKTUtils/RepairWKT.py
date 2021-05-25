@@ -78,6 +78,7 @@ class simplifyWKT():
 
         try:
             # wkt.loads doesn't like 3D/4D tags, BUT it loads the coords just fine:
+            # (Needed until https://github.com/geomet/geomet/issues/58 is fixed)
             wkt_str = wkt_str.upper()
             wkt_str = wkt_str.replace(" Z ", " ").replace(" M ", " ").replace(" ZM ", " ")
             wkt_json = wkt.loads(wkt_str)
