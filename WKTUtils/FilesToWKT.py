@@ -91,6 +91,9 @@ class filesToWKT:
 
         # Turn it into a single WKT:
         full_wkt = "GEOMETRYCOLLECTION({0})".format(",".join(wkt_list))
+        # Needed until https://github.com/geomet/geomet/issues/58 is fixed:
+        full_wkt = full_wkt.upper().replace(" Z ", " ").replace(" M ", " ").replace(" ZM ", " ")
+
         # Bring it to json and back, to collaps any nested GEOMETRYCOLLECTIONS.
         # It'll be in a collection if and only if there are more than one shapes.
         full_wkt = json_to_wkt(wkt.loads(full_wkt))
