@@ -79,9 +79,7 @@ class simplifyWKT():
         try:
             # wkt.loads doesn't like 3D/4D tags, BUT it loads the coords just fine:
             wkt_str = wkt_str.upper()
-            wkt_str = wkt_str.replace(" Z ", " ")
-            wkt_str = wkt_str.replace(" M ", " ")
-            wkt_str = wkt_str.replace(" ZM ", " ")
+            wkt_str = wkt_str.replace(" Z ", " ").replace(" M ", " ").replace(" ZM ", " ")
             wkt_json = wkt.loads(wkt_str)
         except AttributeError as e:
             self.errors = { 'errors': [{'type': 'ATTRIBUTE', 'report': 'Could not parse WKT: {0}.'.format(str(e))}] }
