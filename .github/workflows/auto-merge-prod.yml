@@ -91,10 +91,8 @@ jobs:
       - name: 'Check success of action suite'  
         run: "[[ \"${{ steps.waitforstatuschecktest.outputs.status }}\" == 'success' ]]"
 
-
-      # # TODO:
-      # # take off auto merge label
-      # # Assign reviewers
-
-
-
+      - name: 'Remove auto merge label'
+        uses: actions-ecosystem/action-remove-labels@v1
+        with:
+          labels: auto merge
+          github_token: ${{ secrets.GITHUB_TOKEN }}
