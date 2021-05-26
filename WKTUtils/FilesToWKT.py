@@ -202,6 +202,5 @@ def parse_shapefile(fileset):
     except Exception as e:
         return {'error': {'type': 'VALUE', 'report': 'Could not parse shp: {0}'.format(str(e))}}
     wkt_json = {'type':'GeometryCollection', 'geometries': shapes }
-    print(shapes)
     wkt_str = json_to_wkt(wkt_json)
     return wkt_str
