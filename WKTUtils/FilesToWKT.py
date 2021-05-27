@@ -67,9 +67,9 @@ class filesToWKT:
                 if len(val) == 0:
                     continue
                 elif len(val) == 1:
-                    returned_wkt = val[0].wkt
+                    returned_wkt = json_to_wkt(val[0].__geo_interface__)
                 else:
-                    tmp_list = [shape.wkt for shape in val]
+                    tmp_list = [json_to_wkt(shape.__geo_interface__) for shape in val]
                     returned_wkt = "GEOMETRYCOLLECTION ({0})".format(",".join(tmp_list))
             # Check for each type now:
             elif ext == "geojson":
@@ -91,6 +91,7 @@ class filesToWKT:
 
         # Turn it into a single WKT:
         full_wkt = "GEOMETRYCOLLECTION({0})".format(",".join(wkt_list))
+
         # Bring it to json and back, to collaps any nested GEOMETRYCOLLECTIONS.
         # It'll be in a collection if and only if there are more than one shapes.
         full_wkt = json_to_wkt(wkt.loads(full_wkt))
