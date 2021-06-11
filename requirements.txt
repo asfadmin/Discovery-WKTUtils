@@ -11,6 +11,7 @@ colorama==0.4.3
 contextlib2==0.6.0
 dateparser==1.0.0
 defusedxml==0.7.1
+dependancy_bumper==0.0.0
 distlib==0.3.0
 distro==1.4.0
 execnet==1.8.0
@@ -18,7 +19,7 @@ Fiona==1.8.19
 geomet==0.3.0
 geopandas==0.9.0
 html5lib==1.0.1
-idna==2.8
+idna==3.2
 iniconfig==1.1.1
 ipaddr==2.2.0
 joblib==1.0.1
