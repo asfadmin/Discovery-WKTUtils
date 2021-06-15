@@ -12,7 +12,7 @@ contextlib2==0.6.0
 dateparser==1.0.0
 defusedxml==0.7.1
 dependancy_bumper==0.0.0
-distlib==0.3.0
+distlib==0.3.2
 distro==1.4.0
 execnet==1.8.0
 Fiona==1.8.19
