@@ -77,6 +77,8 @@ jobs:
           title: "Automatic merge triggered from ${{ github.event.pull_request.head.ref }} to test"
           committer: ASF-Discovery <uaf-asf-discovery@alaska.edu>
           author: ASF-Discovery <uaf-asf-discovery@alaska.edu>
+        env:
+          GITHUB_TOKEN: ${{ secrets.BOT_TOKEN }}
 
       - name: 'Wait for action suite'
         uses: "WyriHaximus/github-action-wait-for-status@v1.3"
