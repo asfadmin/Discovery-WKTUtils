@@ -16,7 +16,8 @@ jobs:
     steps:
       - name: debug info
         run: |
-          echo "Branch: ${GITHUB_REF}"
+          echo "PR: ${GITHUB_REF}"
+          echo "Branch: ${{ github.base_ref }}"
 
       - uses: actions/checkout@v2
 
