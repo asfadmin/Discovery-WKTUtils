@@ -83,6 +83,9 @@ jobs:
           committer: ASF-Discovery <uaf-asf-discovery@alaska.edu>
           author: ASF-Discovery <uaf-asf-discovery@alaska.edu>
 
+      - name: 'Let action suite of PR start'
+        run: sleep 10
+
       - name: 'Wait for action suite'
         uses: "WyriHaximus/github-action-wait-for-status@v1.3"
         id: waitforstatuschecktest
