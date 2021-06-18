@@ -18,7 +18,9 @@ jobs:
     if: contains(github.event.pull_request.labels.*.name, 'auto merge')
     runs-on: ubuntu-latest
     steps:
-    
+      - name: debug info
+        run: |
+          echo "Branch: ${GITHUB_REF}"
       # If NOT on devel, wait for checks on SELF to finish:
       - name: 'Wait for action suite'
         if: github.event.pull_request.base.ref != 'devel'

@@ -20,6 +20,10 @@ jobs:
         contains(github.event.pull_request.labels.*.name, 'major')
       )
     steps:
+      - name: debug info
+        run: |
+          echo "Branch: ${GITHUB_REF}"
+          
     - uses: actions/checkout@v2
 
     - name: Save version type

@@ -15,6 +15,10 @@ jobs:
   changelog-updated:
     runs-on: ubuntu-latest
     steps:
+      - name: debug info
+        run: |
+          echo "Branch: ${GITHUB_REF}"
+          
       - uses: actions/checkout@v1
 
       - name: Changelog check
@@ -24,6 +28,7 @@ jobs:
         uses: Zomzog/changelog-checker@v1.2.0
         with:
           fileName: CHANGELOG.md
+          checksNotification: Simple # Default 'Detailed' doesn't work with forks
           # noChangelogLabel: skip-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
