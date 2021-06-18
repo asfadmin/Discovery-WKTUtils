@@ -21,6 +21,10 @@ jobs:
     if: contains(github.event.pull_request.labels.*.name, 'auto merge')
     runs-on: ubuntu-latest
     steps:
+      - name: debug info
+        run: |
+          echo "PR: ${GITHUB_REF}"
+          echo "Branch: ${{ github.base_ref }}"
       ###############
       #### DEVEL ####
       ###############

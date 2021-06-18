@@ -17,6 +17,11 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event.pull_request.state == 'open'
     steps:
+      - name: debug info
+        run: |
+          echo "PR: ${GITHUB_REF}"
+          echo "Branch: ${{ github.base_ref }}"
+
       - name: Require Version Label
         uses: mheap/github-action-required-labels@v1
         with:
