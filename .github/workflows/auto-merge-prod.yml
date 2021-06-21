@@ -87,12 +87,12 @@ jobs:
         run: sleep 10
 
       - name: 'Wait for action suite'
-        uses: "WyriHaximus/github-action-wait-for-status@v1.3"
+        uses: "WyriHaximus/github-action-wait-for-status@v1.3.1"
         id: waitforstatuschecktest
         with:
           checkInterval: 10
-          # Ignore the action, with the right matrix label:
-          ignoreActions: "Automerge [prod]"
+          # Ignore this action:
+          ignoreActions: "Automerge [prod],automerge"
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
