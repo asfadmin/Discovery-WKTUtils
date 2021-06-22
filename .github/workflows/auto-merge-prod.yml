@@ -54,7 +54,22 @@ jobs:
           author: ASF-Discovery <uaf-asf-discovery@alaska.edu>
 
       # DON'T wait here. Devel might be broken anyways, so just move on.
+      # (tmp waiting here, to see if it behaves the same as devel)
+      - name: 'Let action suite of PR start'
+        run: sleep 10
 
+      - name: 'Wait for action suite'
+        uses: "WyriHaximus/github-action-wait-for-status@v1.3.1"
+        id: waitforstatuschecktest
+        with:
+          checkInterval: 10
+          # Ignore this action:
+          ignoreActions: "Automerge [prod],automerge"
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: 'Check success of action suite'  
+        run: "[[ \"${{ steps.waitforstatuschecktest.outputs.status }}\" == 'success' ]]"
       ##############
       #### TEST ####
       ##############
