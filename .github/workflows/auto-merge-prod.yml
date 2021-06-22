@@ -45,7 +45,7 @@ jobs:
         with:
           # Let bot open the PR, so auto merge can trigger
           token: ${{ secrets.BOT_TOKEN }}
-          labels: 'auto merge, dependancies'
+          labels: 'auto merge,dependancies'
           # Open from wherever the PR was from, to each base branch:
           branch: ${{ github.event.pull_request.head.ref }}
           base: devel
@@ -75,7 +75,7 @@ jobs:
         with:
           # Let bot open the PR, so auto merge can trigger
           token: ${{ secrets.BOT_TOKEN }}
-          labels: 'auto merge, dependancies'
+          labels: 'auto merge,dependancies'
           # Open from wherever the PR was from, to each base branch:
           branch: ${{ github.event.pull_request.head.ref }}
           base: test
