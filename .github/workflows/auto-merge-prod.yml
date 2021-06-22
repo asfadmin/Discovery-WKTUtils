@@ -60,7 +60,7 @@ jobs:
 
       - name: 'Wait for action suite'
         uses: "WyriHaximus/github-action-wait-for-status@v1.3.1"
-        id: waitforstatuschecktest
+        id: waitforstatuschecktesttmp
         with:
           checkInterval: 10
           # Ignore this action:
@@ -69,7 +69,7 @@ jobs:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
       - name: 'Check success of action suite'  
-        run: "[[ \"${{ steps.waitforstatuschecktest.outputs.status }}\" == 'success' ]]"
+        run: "[[ \"${{ steps.waitforstatuschecktesttmp.outputs.status }}\" == 'success' ]]"
       ##############
       #### TEST ####
       ##############
