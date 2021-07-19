@@ -3,7 +3,9 @@ name: Auto merge PR's (non-prod)
 on:
   pull_request:
     branches-ignore:
-      - prod
+      # To disable the workflow:
+      - branchdoesntexist
+      # - prod
     types:
       - opened
       - reopened
