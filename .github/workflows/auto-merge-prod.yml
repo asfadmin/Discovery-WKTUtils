@@ -4,7 +4,9 @@ on:
   # DO NOT add other jobs to this action. pull_request_target is scary, so jobs with it need to be reviewed!
   pull_request_target:
     branches:
-      - prod
+      # To disable the workflow:
+      - branchdoesntexist
+      # - prod
     types:
       - opened
       - reopened
