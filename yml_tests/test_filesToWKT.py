@@ -2,10 +2,6 @@ import os, sys              # Generic imports
 import geomet.wkt           # For comparing wkt's
 import shapely
 
-# Add the package to pythonpath before import:
-root_dir = os.path.abspath(os.path.join(__file__,"..",".."))
-if root_dir not in sys.path:
-    sys.path.append(root_dir)
 from WKTUtils.FilesToWKT import filesToWKT
 
 class test_filesToWKT_manager():
