@@ -8,6 +8,21 @@ and uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ------
 
+## [1.1.0](https://github.com/asfadmin/Discovery-WKTUtils/compare/v0.2.1...v1.1.0)
+
+### Added
+- Issue templates for GitHub
+
+### Changed
+- Switched from using `Discovery-PytestAutomation` repo directly, to `pytest-automation` plugin
+- Updated versions in `requirements.txt`
+- Cleaned up and refactored test suite
+
+### Removed
+- Disabled automatic update pipeline, until a better alternative is found
+
+------
+
 ## [0.2.1](https://github.com/asfadmin/Discovery-WKTUtils/compare/v0.2.0...v0.2.1)
 
 ### Fixed
