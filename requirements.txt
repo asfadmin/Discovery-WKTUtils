@@ -53,6 +53,6 @@ six==1.16.0
 sklearn==0.0
 threadpoolctl==2.2.0
 toml==0.10.2
-tzlocal==2.1
+tzlocal==3.0
 urllib3==1.26.6
 webencodings==0.5.1
