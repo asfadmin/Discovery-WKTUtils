@@ -2,16 +2,14 @@ import os, sys           # Generic imports
 import shapely.wkt, geomet.wkt      # For comparing wkt's
 
 # Add the package to pythonpath before import:
-root_dir = os.path.abspath(os.path.join(".."))
+root_dir = os.path.abspath(os.path.join(__file__,"..",".."))
 if root_dir not in sys.path:
     sys.path.append(root_dir)
 from WKTUtils.RepairWKT import repairWKT
 
 class test_repairWKT_manager():
-    def __init__(self, test_info, file_conf, cli_args, test_vars):
-        self.error_msg = "Reason: {0}\n - File: '{1}'\n - Test: '{2}'".format('{0}', file_conf["yml name"], test_info["title"])
-
-        test_info = self.applyDefaultValues(test_info)
+    def __init__(self, **args):
+        test_info = self.applyDefaultValues(args["test_info"])
         # Make a request, and turn it into json. Helpers should handle if something goes wrong:
         
         if "from_crs" in test_info:
@@ -59,30 +57,25 @@ class test_repairWKT_manager():
 
     def runAssertTests(self, test_info, response_json):
         if "repaired wkt wrapped" in test_info:
-            if "wkt" in response_json:
-                responce = shapely.wkt.loads(response_json["wkt"]["wrapped"])
-                expected = shapely.wkt.loads(test_info["repaired wkt wrapped"])
-                assert responce.almost_equals(expected, decimal=8) , self.error_msg.format("WKT wrapped failed to match the result.\nExpected: {0}\nActual: {1}\n".format(test_info["repaired wkt wrapped"], response_json["wkt"]["wrapped"]))
-            else:
-                assert False, "WKT not found in response from API. Test: '{0}'. Response: {1}.".format(test_info["title"], response_json)
+            assert "wkt" in response_json, "WKT not found in response from API. Response: {0}.".format(response_json)
+            responce = shapely.wkt.loads(response_json["wkt"]["wrapped"])
+            expected = shapely.wkt.loads(test_info["repaired wkt wrapped"])
+            assert responce.almost_equals(expected, decimal=8) , "ERROR: WKT wrapped failed to match the result.\nExpected: {0}\nActual: {1}\n".format(test_info["repaired wkt wrapped"], response_json["wkt"]["wrapped"])
+ 
         if "repaired wkt unwrapped" in test_info:
-            if "wkt" in response_json:
-                responce = shapely.wkt.loads(response_json["wkt"]["unwrapped"])
-                expected = shapely.wkt.loads(test_info["repaired wkt wrapped"])
-                assert responce.almost_equals(expected, decimal=8), self.error_msg.format("WKT unwrapped failed to match the result.\nExpected: {0}\nActual: {1}\n".format(test_info["repaired wkt wrapped"], response_json["wkt"]["wrapped"]))
-            else:
-                assert False, self.error_msg.format("WKT not found in response from API. Response: {0}.".format(response_json))
+            assert "wkt" in response_json, "ERROR: WKT not found in response from API. Response: {0}.".format(response_json)
+            responce = shapely.wkt.loads(response_json["wkt"]["unwrapped"])
+            expected = shapely.wkt.loads(test_info["repaired wkt wrapped"])
+            assert responce.almost_equals(expected, decimal=8), "ERROR: WKT unwrapped failed to match the result.\nExpected: {0}\nActual: {1}\n".format(test_info["repaired wkt wrapped"], response_json["wkt"]["wrapped"])
 
         if test_info["check repair"]:
-            if "repairs" in response_json:
-                for repair in test_info["repair"]:
-                    assert repair in str(response_json["repairs"]), self.error_msg.format("Expected repair was not found in results. Repairs done: {0}".format(response_json["repairs"]))
-                assert len(response_json["repairs"]) == len(test_info["repair"]), self.error_msg.format("Number of repairs doesn't equal number of repaired repairs. Repairs done: {0}.".format(response_json["repairs"]))
-            else:
-                assert False, "Unexpected WKT returned: {0}. Test: '{1}'".format(response_json, test_info["title"])
+            assert "repairs" in response_json, "ERROR: Unexpected WKT returned: {0}.".format(response_json)
+            for repair in test_info["repair"]:
+                assert repair in str(response_json["repairs"]), "ERROR: Expected repair was not found in results. Repairs done: {0}".format(response_json["repairs"])
+            assert len(response_json["repairs"]) == len(test_info["repair"]), "ERROR: Number of repairs doesn't equal number of repaired repairs. Repairs done: {0}.".format(response_json["repairs"])
+
         if "repaired error msg" in test_info:
-            if "error" in response_json:
-                assert test_info["repaired error msg"] in response_json["error"]["report"], self.error_msg.format("Got different error message than expected. Error returned: {0}".format(response_json["error"]["report"]))
-            else:
-                assert False, self.error_msg.format("Unexpected WKT returned. Response: {0}.".format(response_json))
+            assert "error" in response_json, "ERROR: Unexpected WKT returned. Response: {0}.".format(response_json)
+            assert test_info["repaired error msg"] in response_json["error"]["report"], "ERROR: Got different error message than expected. Error returned: {0}".format(response_json["error"]["report"])
+
 
