@@ -3,17 +3,16 @@ import geomet.wkt           # For comparing wkt's
 import shapely
 
 # Add the package to pythonpath before import:
-root_dir = os.path.abspath(os.path.join(".."))
+root_dir = os.path.abspath(os.path.join(__file__,"..",".."))
 if root_dir not in sys.path:
     sys.path.append(root_dir)
 from WKTUtils.FilesToWKT import filesToWKT
 
 class test_filesToWKT_manager():
-    def __init__(self, test_info, file_conf, cli_args, test_vars):
-        # I replace '{0}' with itself, so that you can format that in later, and everything else is populated already:
-        self.error_msg = "Reason: {0}\n - File: '{1}'\n - Test: '{2}'".format('{0}', file_conf["yml name"], test_info["title"])
+    def __init__(self, **args):
+        # test_info, file_conf, cli_args, test_vars
         
-        test_info = self.applyDefaultValues(test_info)
+        test_info = self.applyDefaultValues(args["test_info"])
         wkt_json = filesToWKT(test_info["file wkt"]).getWKT()
 
         if test_info["print"] == True:
@@ -55,28 +54,26 @@ class test_filesToWKT_manager():
         files_that_exist = []
         for file in test_info["file wkt"]:
             file_path = os.path.join(resources_dir, file)
-            if os.path.isfile(file_path):
-                # Save it in the format FilesToWKT is expecting:
-                files_that_exist.append(open(file_path, 'rb'))
-            else:
-                assert False, self.error_msg.format("File in 'file wkt' not found: {0}.")
+            # Make sure it exists:
+            assert os.path.isfile(file_path), "ERROR: File in 'file wkt' not found: {0}.".format(file_path)
+            # Save it in the format FilesToWKT is expecting:
+            files_that_exist.append(open(file_path, 'rb'))
         # Override with the new files:
         test_info["file wkt"] = files_that_exist
         return test_info
 
     def runAssertTests(self, test_info, wkt_json):
         if "parsed wkt" in test_info:
-            if "parsed wkt" in wkt_json:
-                lhs = shapely.wkt.loads(wkt_json["parsed wkt"])
-                rhs = shapely.wkt.loads(test_info["parsed wkt"])
-                assert lhs.almost_equals(rhs, decimal=8), self.error_msg.format("Parsed wkt returned from API did not match 'parsed wkt'.")
-            else:
-                # Here, I want content to be last. sometimes it explodes in length...                
-                assert False, self.error_msg.format("API did not return a WKT.") + "\n - Content: "+str(wkt_json)
+            # Here, I want content to be last. sometimes it explodes in length...
+            assert "parsed wkt" in wkt_json, "ERROR: API did not return a WKT.\n - Content:\n{0}\n".format(str(wkt_json))
+            lhs = shapely.wkt.loads(wkt_json["parsed wkt"])
+            rhs = shapely.wkt.loads(test_info["parsed wkt"])
+            assert lhs.almost_equals(rhs, decimal=8), "ERROR: Parsed wkt returned from API did not match 'parsed wkt'."
+
         if test_info["check errors"] == True:
             # Give errors a value to stop key-errors, and force the len() test to always happen:
             if "errors" not in wkt_json:
                 wkt_json["errors"] = []
             for error in test_info["errors"]:
-                assert str(error) in str(wkt_json["errors"]), self.error_msg.format("Response did not contain expected error.\nExpected: '{0}'\nNot found in:\n{1}\n".format(error, wkt_json["errors"]))
-            assert len(test_info["errors"]) == len(wkt_json["errors"]), self.error_msg.format("Number of errors declared did not line up with number of expected errors.\nWarnings in response:\n{0}\n".format(wkt_json["errors"]))
+                assert str(error) in str(wkt_json["errors"]), "ERROR: Response did not contain expected error.\nExpected: '{0}'\nNot found in:\n{1}\n".format(error, wkt_json["errors"])
+            assert len(test_info["errors"]) == len(wkt_json["errors"]), "ERROR: Number of errors declared did not line up with number of expected errors.\nWarnings in response:\n{0}\n".format(wkt_json["errors"])
