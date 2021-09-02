@@ -1,0 +1,14 @@
+
+
+test_types:
+- Repair WKT:
+    required_keys: test wkt
+    method: test_repairWKT
+
+- Files to WKT:
+    required_keys: file wkt
+    method: test_filesToWKT
+
+- Validate WKT:
+    required_keys: validate wkt
+    method: test_validateWKT
