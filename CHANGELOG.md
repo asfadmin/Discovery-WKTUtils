@@ -8,6 +8,18 @@ and uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ------
 
+## [1.1.1](https://github.com/asfadmin/Discovery-WKTUtils/compare/v1.1.0...v1.1.1)
+
+## Added
+- Project now declares `__version__`.
+
+## Changed
+- Bumped up pytest, pytest-automation, and pluggy to latest versions, for test suite
+- Bumped up geopandas, pandas, and regex to latest, to remove warnings
+- Updated PyPI publishing pipeline, to version GitHub recommends
+
+------
+
 ## [1.1.0](https://github.com/asfadmin/Discovery-WKTUtils/compare/v0.2.1...v1.1.0)
 
 ### Added
