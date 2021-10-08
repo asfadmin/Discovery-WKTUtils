@@ -59,7 +59,7 @@ class simplifyWKT():
             wkt_shapely = shapely.wkt.loads(wkt_idx[0])
             wkt_geopanda = geopandas.GeoSeries([wkt_shapely], crs=wkt_idx[1])
             # Reproject it if not in lat/long:
-            if wkt_geopanda.crs != "EPSG:4326":
+            if str(wkt_geopanda.crs) != "EPSG:4326":
                 wkt_geopanda = wkt_geopanda.to_crs("EPSG:4326")
                 reproject_count += 1
             ### Recombine and append:
