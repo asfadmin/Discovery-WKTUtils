@@ -2,9 +2,7 @@ import os
 import logging
 
 def get_config():
-    if 'MATURITY' not in os.environ.keys():
-        logging.warning('os.environ[\'MATURITY\'] not set! Defaulting to prod config.]')
-    return {
+    config_dict = {
         'local': {
             'this_api': 'http://local.asf.alaska.edu:5000',
             'bulk_download_api': 'https://bulk-download.asf.alaska.edu',
@@ -89,4 +87,15 @@ def get_config():
                 'Client-Id': 'vertex_asf'
             }
         }
-    }[os.environ['MATURITY'] if 'MATURITY' in os.environ.keys() else 'prod']
+    }
+    # If they don't set a maturity
+    if 'MATURITY' not in os.environ.keys():
+        logging.warning('os.environ[\'MATURITY\'] not set! Defaulting to prod config.]')
+        maturity = 'prod'
+    # If we don't have that maturity
+    elif os.environ['MATURITY'] not in config_dict:
+        logging.warning('os.environ[\'MATURITY\'] is unknown! Defaulting to prod config.]')
+        maturity = 'prod'
+    else:
+        maturity = os.environ['MATURITY']
+    return config_dict[maturity]
