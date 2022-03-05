@@ -8,6 +8,13 @@ and uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ------
 
+## [1.1.4](https://github.com/asfadmin/Discovery-WKTUtils/compare/v1.1.3...v1.1.4)
+
+### Fixed
+- Removing pyproj as a requirement, since we don't need zappa anymore.
+
+------
+
 ## [1.1.3](https://github.com/asfadmin/Discovery-WKTUtils/compare/v1.1.2...v1.1.3)
 
 ### Fixed

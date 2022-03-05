@@ -27,7 +27,6 @@ setuptools.setup(
         'Fiona',
         'geomet',
         'geopandas',
-        'pyproj<=2.6.0', # Anything greater fails when using zappa: https://github.com/pyproj4/pyproj/issues/977
         'kml2geojson',
         'pyshp',
         'PyYAML',
