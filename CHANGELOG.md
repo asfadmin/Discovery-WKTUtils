@@ -8,6 +8,13 @@ and uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ------
 
+## [1.1.3](https://github.com/asfadmin/Discovery-WKTUtils/compare/v1.1.2...v1.1.3)
+
+### Fixed
+- If 'MATURITY' environment variable is unknown, it now defaults to 'prod'.
+
+------
+
 ## [1.1.2](https://github.com/asfadmin/Discovery-WKTUtils/compare/v1.1.1...v1.1.2)
 
 ### Fixed
