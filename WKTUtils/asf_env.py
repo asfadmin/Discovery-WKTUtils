@@ -90,7 +90,7 @@ def get_config():
     }
     # If they don't set a maturity
     if 'MATURITY' not in os.environ.keys():
-        logging.warning('os.environ[\'MATURITY\'] not set! Defaulting to prod config.]')
+        # logging.warning('os.environ[\'MATURITY\'] not set! Defaulting to prod config.]')
         maturity = 'prod'
     # If we don't have that maturity
     elif os.environ['MATURITY'] not in config_dict:
