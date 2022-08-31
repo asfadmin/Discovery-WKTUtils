@@ -562,7 +562,7 @@ class simplifyWKT():
         cmr_coords = parse_wkt_util(wkt.dumps(wkt_obj_wrapped)).split(':')[1].split(',')
         status_code, text = CMRSendRequest(cmr_coords)
         if status_code != 200:
-            if 'Please check the order of your points.' in text:
+            if 'Points must be provided in counter-clockwise order.' in text:
                 it = iter(cmr_coords)
                 rev = reversed(list(zip(it, it)))
                 reversed_coords = [i for sub in rev for i in sub]
