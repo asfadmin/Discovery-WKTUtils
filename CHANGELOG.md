@@ -8,6 +8,13 @@ and uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ------
 
+## [1.1.6](https://github.com/asfadmin/Discovery-WKTUtils/compare/v1.1.5...v1.1.6)
+
+### Fixed
+- Fixes clockwise polygon repair failing due to updated CMR error message
+
+------
+
 ## [1.1.5](https://github.com/asfadmin/Discovery-WKTUtils/compare/v1.1.4...v1.1.5)
 
 ### Removed
