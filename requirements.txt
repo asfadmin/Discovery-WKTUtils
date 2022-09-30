@@ -22,7 +22,7 @@ html5lib==1.0.1
 idna==3.2
 iniconfig==1.1.1
 ipaddr==2.2.0
-joblib==1.0.1
+joblib==1.2.0
 kml2geojson==4.0.2
 lockfile==0.12.2
 msgpack==0.6.2
