@@ -5,13 +5,13 @@ with open("README.md", "r") as fh:
 
 extra_requirements = [
     'requests',
-    'scikit-learn',
+    'scikit-learn', 
 ]
 
 test_requirements = [
-    'pytest',
-    'pytest-xdist',
-    'pytest-automation',
+    "pytest==6.2.5",
+    "pytest-automation==1.1.2",
+    'pytest-xdist==2.4.0',
 ]
 
 setuptools.setup(
