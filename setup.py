@@ -8,6 +8,12 @@ extra_requirements = [
     'scikit-learn',
 ]
 
+test_requirements = [
+    'pytest',
+    'pytest-xdist',
+    'pytest-automation',
+]
+
 setuptools.setup(
     name="WKTUtils",
     # version= Moved to pyproject.toml,
@@ -17,7 +23,7 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/asfadmin/Discovery-WKTUtils.git",
-    extras_require={"extras": extra_requirements},
+    extras_require={"extras": extra_requirements, "test": test_requirements},
     packages=setuptools.find_packages(),
     # package_data= {'WKTUtils': ['VERSION']},
     classifiers=[
