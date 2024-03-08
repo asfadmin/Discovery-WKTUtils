@@ -10,8 +10,8 @@ import pyproj
 import geopandas
 from geomet import wkt as geomet_wkt, InvalidGeoJSONException
 from shapely.geometry import Polygon, LineString, Point
-from shapely.wkt import loads as wkt_loads, dumps as wkt_dumps
-from shapely import ops
+import shapely.wkt
+import shapely.ops
 
 try:
     import requests
@@ -64,7 +64,7 @@ class simplifyWKT():
                     crs_idx = default_crs
                 wkt_idx = (wkt_idx[0], crs_idx)
             # Load it into geopanda to reporject:
-            wkt_shapely = wkt_loads(wkt_idx[0])
+            wkt_shapely = shapely.wkt.loads(wkt_idx[0])
             wkt_geopanda = geopandas.GeoSeries([wkt_shapely], crs=wkt_idx[1])
             # Reproject it if not in lat/long:
             if str(wkt_geopanda.crs) != "EPSG:4326":
@@ -127,7 +127,7 @@ class simplifyWKT():
                 # If it's STILL not possible, just convex hull everything together.
                 if single_wkt == None:
                     possible_repair = {'type': 'CONVEX_HULL_ALL', 'report': 'Unconnected shapes: Convex-halled ALL the shapes together.'}
-                    all_shapes = ops.unary_union(self.shapes)
+                    all_shapes = shapely.ops.unary_union(self.shapes)
                     # 0 = shape, 1 = bool success: (NOT first shape)
                     single_wkt = self.__convexHullShape(all_shapes)
                 self.repairs.append(possible_repair)
@@ -322,7 +322,7 @@ class simplifyWKT():
         for item in wkt_obj:
             # If a json / geojson:
             if isinstance(item, type({})):
-                wkt_shapely.append(wkt_loads(geomet_wkt.dumps(item)))
+                wkt_shapely.append(shapely.wkt.loads(geomet_wkt.dumps(item)))
             # Else you got it from shapely:
             elif getattr(item, "geom_type", None) != None:
                 converted_from_shapely = True
@@ -330,9 +330,9 @@ class simplifyWKT():
         # Check for simple case:
         if len(wkt_shapely) == 1 and wkt_shapely[0].geom_type.upper() in ["POINT","MULTIPOINT","LINESTRING","POLYGON"]:
             hulled_shape = wkt_shapely[0].convex_hull
-            return hulled_shape if converted_from_shapely else geomet_wkt.loads(wkt_dumps(hulled_shape))
+            return hulled_shape if converted_from_shapely else geomet_wkt.loads(shapely.wkt.dumps(hulled_shape))
         # Have to merge the coords:
-        wkt_json = [geomet_wkt.loads(wkt_dumps(shape)) for shape in wkt_shapely]
+        wkt_json = [geomet_wkt.loads(shapely.wkt.dumps(shape)) for shape in wkt_shapely]
         all_coords = self.__getAllCoords(wkt_json)
         if len(all_coords) == 0:
             return None
@@ -340,18 +340,18 @@ class simplifyWKT():
         # Convex_hull and add the new shape:
         MultiPoint = {'type': 'MultiPoint', 'coordinates': all_coords }
         # Quicky convert to shapely obj for the convex hull:
-        shape = wkt_loads(geomet_wkt.dumps(MultiPoint)).convex_hull
+        shape = shapely.wkt.loads(geomet_wkt.dumps(MultiPoint)).convex_hull
         # If they passed in a shapely object, return one. Else return a geojson
         if converted_from_shapely:
             return shape
         else:
             # else convert back to geojson:
-            return geomet_wkt.loads(wkt_dumps(shape))
+            return geomet_wkt.loads(shapely.wkt.dumps(shape))
 
     def __jsonToShapely(self, list_of_shapes):
         shapely_shapes = []
         for shape in list_of_shapes:
-            shape = wkt_loads(geomet_wkt.dumps(shape))
+            shape = shapely.wkt.loads(geomet_wkt.dumps(shape))
             shapely_shapes.append(shape)
         return shapely_shapes
 
@@ -359,7 +359,7 @@ class simplifyWKT():
     # else None otherwise
     def __mergeShapelyList(self, shapely_list):
         # Merge the shape, then apply some repairs:
-        union = ops.unary_union(shapely_list)
+        union = shapely.ops.unary_union(shapely_list)
 
         if union.geom_type.upper() in ['GEOMETRYCOLLECTION', 'MULTIPOLYGON']:
             # This means there are shapes completely by themselves:
@@ -372,7 +372,7 @@ class simplifyWKT():
         elif union.geom_type.upper() == 'MULTILINESTRING':
             # IF only one line, merge returns linestring.
             # IF two+ lines, even if they're connected, merge returns multilinestring
-            line_merge = ops.linemerge(union)
+            line_merge = shapely.ops.linemerge(union)
             # If it collapsed into one line:
             if line_merge.geom_type.upper() == 'LINESTRING':
                 return line_merge
@@ -391,7 +391,7 @@ class simplifyWKT():
         for i, single_shape in enumerate(wkt_obj):
             # If the shape is from shapely:
             if getattr(single_shape, "geom_type", None) != None:
-                wkt_obj[i] = geomet_wkt.loads(wkt_dumps(single_shape))
+                wkt_obj[i] = geomet_wkt.loads(shapely.wkt.dumps(single_shape))
 
         match_coords = r'(\[\s*' +self.regex_digit+ r'\s*,\s*' +self.regex_digit+ r'\s*\])'
         coords = re.findall(match_coords, str(wkt_obj))
@@ -422,11 +422,11 @@ class simplifyWKT():
 
         def getJsonWKT(str_type, coords):
             if str_type.upper() == "POLYGON":
-                new_shape = wkt_dumps(Polygon( coords ))
+                new_shape = shapely.wkt.dumps(Polygon( coords ))
             elif str_type.upper() == "LINESTRING":
-                new_shape = wkt_dumps(LineString( coords ))
+                new_shape = shapely.wkt.dumps(LineString( coords ))
             elif str_type.upper() == "POINT":
-                new_shape = wkt_dumps(Point( coords[0] ))
+                new_shape = shapely.wkt.dumps(Point( coords[0] ))
             return geomet_wkt.loads(new_shape)
 
         def getClampedCoords(wkt_json):
@@ -514,14 +514,14 @@ class simplifyWKT():
             org_num_points = len(getCoords(wkt_json))
             current_num_points = org_num_points
             closest_distance = getClosestPointDist(wkt_json)
-            wkt_shapely = wkt_loads(geomet_wkt.dumps(wkt_json))
+            wkt_shapely = shapely.wkt.loads(geomet_wkt.dumps(wkt_json))
             while (current_num_points > 300 or closest_distance < 0.004) and attempts < 10:
                 # Set the tolerance/closest_distance for the next loop around:
                 logging.debug('The shape\'s length is {0}, simplifying further with tolerance {1}'.format(current_num_points, tolerance ))
                 attempts += 1
                 wkt_shapely = wkt_shapely.simplify(tolerance, preserve_topology=True)
                 tolerance *= 5
-                wkt_json = geomet_wkt.loads(wkt_dumps(wkt_shapely))
+                wkt_json = geomet_wkt.loads(shapely.wkt.dumps(wkt_shapely))
                 current_num_points = len(getCoords(wkt_json))
                 closest_distance = getClosestPointDist(wkt_json)
             # If it couldn't simplify enough:
@@ -535,7 +535,7 @@ class simplifyWKT():
                     'report': 'Simplified shape from {0} points to {1} points, after {2} iterations.'.format(org_num_points, current_num_points, attempts)
                 })
                 logging.debug(self.repairs[-1])
-            return geomet_wkt.loads(wkt_dumps(wkt_shapely))
+            return geomet_wkt.loads(shapely.wkt.dumps(wkt_shapely))
 
         ## REPAIR MERGED WKT START:
         # Quick sanity check. No clue if it's actually possible to hit this:
@@ -543,7 +543,7 @@ class simplifyWKT():
             self.errors = {'errors': [{'type': 'VALUE', 'report': 'Could not simplify WKT down to single shape.'}] }
             return
         # You can't edit coords in shapely. You have to create a new shape w/ the new coords:
-        wkt_json = geomet_wkt.loads(wkt_dumps(single_wkt))
+        wkt_json = geomet_wkt.loads(shapely.wkt.dumps(single_wkt))
         wkt_json = getClampedCoords(wkt_json)
         wkt_json = simplifyPoints(wkt_json)
         # Clamp, simplify, *then* wrap, to help simplify be more accuate w/ points outside of poles
