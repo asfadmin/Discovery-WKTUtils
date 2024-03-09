@@ -1,5 +1,4 @@
 import dateparser
-import re
 from geomet import wkt, InvalidGeoJSONException
 
 

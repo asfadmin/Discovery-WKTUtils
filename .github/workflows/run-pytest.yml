@@ -11,8 +11,8 @@ jobs:
       - name: Install dependancies
         run: |
           python3 -m pip install --upgrade pip
-          python3 -m pip install -r requirements.txt
+          python3 -m pip install .[extras,test]
 
       - name: Run the Test Suite
         run: |
-          pytest -n auto .
+          python3 -m pytest -n auto .

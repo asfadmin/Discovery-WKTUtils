@@ -1,8 +1,18 @@
 import setuptools
 
-
 with open("README.md", "r") as fh:
     long_description = fh.read()
+
+extra_requirements = [
+    'requests',
+    'scikit-learn', 
+]
+
+test_requirements = [
+    "pytest==6.2.5",
+    "pytest-automation==1.1.2",
+    'pytest-xdist==2.4.0',
+]
 
 setuptools.setup(
     name="WKTUtils",
@@ -13,6 +23,7 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/asfadmin/Discovery-WKTUtils.git",
+    extras_require={"extras": extra_requirements, "test": test_requirements},
     packages=setuptools.find_packages(),
     # package_data= {'WKTUtils': ['VERSION']},
     classifiers=[
@@ -20,19 +31,15 @@ setuptools.setup(
         "License :: OSI Approved :: BSD License",
         "Operating System :: OS Independent",
     ],
-    python_requires='>=3.6',
+    python_requires='>=3.8',
     install_requires=[
         'dateparser',
         'defusedxml',
-        'Fiona',
         'geomet',
         'geopandas',
         'kml2geojson',
         'pyshp',
         'PyYAML',
-        'regex',
-        'requests',
-        'Shapely',
-        'sklearn',
-    ]
+        'Shapely'
+    ],
 )
